@@ -8,7 +8,6 @@ const Footer = () => {
     <footer className="border-t border-border bg-card mt-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* About Section */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Code2 className="h-6 w-6 text-primary" />
@@ -19,8 +18,6 @@ const Footer = () => {
               vibrant community of students passionate about technology and innovation.
             </p>
           </div>
-
-          {/* Quick Links */}
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
@@ -46,8 +43,6 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-
-          {/* Contact */}
           <div>
             <h4 className="font-semibold mb-4">Connect</h4>
             <div className="space-y-3">
