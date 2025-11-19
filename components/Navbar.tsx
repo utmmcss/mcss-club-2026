@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Menu, X, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,8 +24,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Code2 className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold">MCSS</span>
+            <img src="./mcss.svg" alt="MCSS Logo" className="h-14 w-14" />
           </Link>
           <div className="hidden md:flex items-center gap-8">
             {links.map((link) => (
@@ -41,6 +41,7 @@ const Navbar = () => {
             <Button asChild>
               <Link href="/contact">Join Us</Link>
             </Button>
+            <ThemeToggle />
           </div>
           <button
             className="md:hidden p-2"
@@ -70,6 +71,9 @@ const Navbar = () => {
                   Join Us
                 </Link>
               </Button>
+              <div className="pt-2">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         )}

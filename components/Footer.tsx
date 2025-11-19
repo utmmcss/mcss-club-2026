@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, Linkedin, Github, Twitter, Code2 } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -10,8 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <Code2 className="h-6 w-6 text-primary" />
-              <span className="text-lg font-bold">MCSS</span>
+              <img src="/mcss.svg" alt="MCSS Logo" className="h-10 w-10" />
             </div>
             <p className="text-muted-foreground text-sm max-w-md">
               The Mississauga Computer Science Society is dedicated to fostering a
@@ -55,28 +54,28 @@ const Footer = () => {
               </a>
               <div className="flex gap-3 pt-2">
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.instagram.com/utmmcss"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <img src="/instagram.svg" alt="Instagram" className="h-4 w-4" />
                 </a>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/utmmcss"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Github className="h-5 w-5" />
+                  <img src="/github.svg" alt="GitHub" className="h-4 w-4" />
                 </a>
                 <a
-                  href="https://twitter.com"
+                  href="https://www.linkedin.com/company/utmmcss"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Twitter className="h-5 w-5" />
+                  <img src="/linkedin.svg" alt="LinkedIn" className="h-4 w-4" />
                 </a>
               </div>
             </div>

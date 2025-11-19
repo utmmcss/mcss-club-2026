@@ -5,60 +5,60 @@ import TeamCard from "@/components/TeamCard";
 const Team = () => {
   const executives = [
     {
-      name: "Sarah Chen",
-      role: "President",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      name: "Emily Su",
+      role: "VP Internal Affairs",
+      image: "/emily.jpg",
+      linkedin: "https://www.linkedin.com/in/emilysucanada",
+      social: "https://www.instagram.com/emz.y",
     },
     {
-      name: "Michael Rodriguez",
+      name: "Ana Elisa",
       role: "Vice President",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      image: "/ana.jpg",
+      linkedin: "www.linkedin.com/in/ana-elisa-l",
+      social: "www.linkedin.com/in/ana-elisa-l",
     },
     {
       name: "Emily Johnson",
       role: "Events Coordinator",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
       linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      social: "https://github.com",
     },
     {
       name: "David Kim",
       role: "Technology Director",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
       linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      social: "https://github.com",
     },
     {
       name: "Aisha Patel",
       role: "Marketing Director",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Aisha",
       linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      social: "https://github.com",
     },
     {
       name: "James Wilson",
       role: "Finance Director",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
       linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      social: "https://github.com",
     },
     {
       name: "Lisa Zhang",
       role: "Community Manager",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa",
       linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      social: "https://github.com",
     },
     {
       name: "Marcus Thompson",
       role: "Sponsorship Coordinator",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
       linkedin: "https://linkedin.com",
-      github: "https://github.com",
+      social: "https://github.com",
     },
   ];
 
@@ -78,9 +78,9 @@ const Team = () => {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="mb-4">Executive Team 2024</h2>
+              <h2 className="mb-4">Executive Team 2025</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Our passionate team of students dedicated to serving the MCSS community.
+                Our team for the 2025 school year!
               </p>
             </div>
             

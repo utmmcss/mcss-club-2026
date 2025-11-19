@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Target, Users, Trophy } from "lucide-react";
+import { Target, Users, Gamepad } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -7,8 +7,8 @@ const About = () => {
   const pillars = [
     {
       icon: Users,
-      title: "Student Support",
-      description: "We provide mentorship programs, study groups, and academic resources to ensure every student has the support they need to excel in their studies.",
+      title: "Coding Workshops",
+      description: "We offer coding workshops for students to learn how to use different technologies to build their own projects.",
       points: [
         "Peer mentorship programs",
         "Study sessions and exam prep",
@@ -18,7 +18,7 @@ const About = () => {
     },
     {
       icon: Target,
-      title: "Professional Development",
+      title: "Info Sessions",
       description: "Through workshops, tech talks, and networking events, we help students develop the skills and connections needed for successful careers.",
       points: [
         "Industry guest speakers",
@@ -28,13 +28,13 @@ const About = () => {
       ],
     },
     {
-      icon: Trophy,
+      icon: Gamepad,
       title: "Innovation & Community",
-      description: "We foster creativity and collaboration through hackathons, projects, and social events that bring our community together.",
+      description: "We foster creativity and collaboration through hackathons, projects, and gaming events that bring our community together.",
       points: [
         "Annual hackathons",
         "Collaborative projects",
-        "Social and networking events",
+        "Gaming Events",
         "Community building initiatives",
       ],
     },
@@ -48,9 +48,8 @@ const About = () => {
         <section className="hero-gradient text-white py-16 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 fade-in">
             <h1 className="mb-6 text-white">About MCSS</h1>
-            <p className="text-xl md:text-2xl max-w-3xl text-white/90">
-              Building the future of technology, one student at a time.
-            </p>
+            <p className="text-xl md:text-2xl max-w-4xl text-white/90">
+                Hello students and welcome! UTM Mathematical and Computational Sciences Society (MCSS) is the official academic society for the Mathematics and Computational Sciences Department. The purpose of the club is to officially represent the students, promote and achieve the common interests of the students, encourage academic, social, and career related support for the students, maintain open lines of communication between the students and the department's faculty and staff, as well as maintain communication between the students themselves, and encourage faculty and student interaction outside of the formal lecture, tutorial, and lab settings            </p>
           </div>
         </section>
         <section className="py-16 md:py-24">
@@ -60,7 +59,7 @@ const About = () => {
               <p className="text-lg text-muted-foreground text-center mb-12">
                 The Mississauga Computer Science Society (MCSS) is the official computer science student 
                 society at the University of Toronto Mississauga. We are dedicated to fostering a vibrant 
-                community where students can learn, grow, and thrive in the field of computer science.
+                community where students can learn, grow, and thrive in the UTM MCS community.
               </p>
               
               <Card>

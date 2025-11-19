@@ -187,24 +187,6 @@ const Contact = () => {
                     </Card>
                   </div>
                 </div>
-                <Card className="card-hover">
-                  <CardHeader>
-                    <CardTitle>Office Hours</CardTitle>
-                    <CardDescription>Drop by to chat with our team</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-sm text-muted-foreground">
-                      <div className="flex justify-between">
-                        <span>Monday - Friday:</span>
-                        <span className="font-medium">2:00 PM - 4:00 PM</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Location:</span>
-                        <span className="font-medium">IB 345</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
             </div>
           </div>

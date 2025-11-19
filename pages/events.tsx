@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
-import { fetchEventsFromSheet } from "@/lib/parseCsv";
 import { useEffect, useState } from "react";
 
 const Events = () => {
@@ -12,10 +11,13 @@ const Events = () => {
   useEffect(() => {
     async function load() {
       try {
-        const events = await fetchEventsFromSheet();
+        const res = await fetch("/api/events");
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const data = await res.json();
+        const events = data.events || [];
 
-        const upcoming = events.filter(e => e.isUpcoming);
-        const past = events.filter(e => !e.isUpcoming);
+        const upcoming = events.filter((e: any) => e.isUpcoming);
+        const past = events.filter((e: any) => !e.isUpcoming);
 
         setUpcomingEvents(upcoming);
         setPastEvents(past);

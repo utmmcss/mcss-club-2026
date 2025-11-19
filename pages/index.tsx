@@ -5,8 +5,7 @@ import { Users, Calendar, Lightbulb, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
-import heroImage from "@/assets/hero-bg.jpg";
-import { fetchEventsFromSheet } from "@/lib/parseCsv";
+import heroImage from "@/public/hero-bg.jpg";
 import { useEffect, useState } from "react";
 
 const Index = () => {
@@ -14,25 +13,28 @@ const Index = () => {
     const [pastEvents, setPastEvents] = useState([]);
     const [loading, setLoading] = useState(true);
   
-    useEffect(() => {
-      async function load() {
-        try {
-          const events = await fetchEventsFromSheet();
-  
-          const upcoming = events.filter(e => e.isUpcoming);
-          const past = events.filter(e => !e.isUpcoming);
-  
-          setUpcomingEvents(upcoming);
-          setPastEvents(past);
-        } catch (err) {
-          console.error("Failed to fetch events:", err);
-        } finally {
-          setLoading(false);
-        }
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch("/api/events");
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const data = await res.json();
+        const events = data.events || [];
+
+        const upcoming = events.filter((e: any) => e.isUpcoming);
+        const past = events.filter((e: any) => !e.isUpcoming);
+
+        setUpcomingEvents(upcoming);
+        setPastEvents(past);
+      } catch (err) {
+        console.error("Failed to fetch events:", err);
+      } finally {
+        setLoading(false);
       }
-  
-      load();
-    }, []);
+    }
+
+    load();
+  }, []);
   
     if (loading) {
       return (
@@ -45,18 +47,18 @@ const Index = () => {
   const pillars = [
     {
       icon: Users,
-      title: "Student Support",
+      title: "Coding Workshops",
       description: "Mentorship programs, study groups, and academic resources to help you succeed.",
     },
     {
       icon: Calendar,
-      title: "Events & Workshops",
+      title: "Info Sessions",
       description: "Regular workshops, tech talks, and networking events with industry professionals.",
     },
     {
       icon: Lightbulb,
       title: "Innovation & Community",
-      description: "Foster creativity through hackathons, projects, and collaborative learning.",
+      description: "Foster creativity through hackathons, projects, and gaming events!",
     },
   ];
 
@@ -74,16 +76,13 @@ const Index = () => {
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 fade-in">
           <div className="max-w-3xl">
-            <h1 className="mb-6 text-white">
-              Welcome to the Mississauga Computer Science Society
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-white/90">
-              Building a vibrant community of students passionate about technology and innovation.
+            <p className="text-xl md:text-2xl mb-4 text-white/90">
+              University of Toronto Mississauga
             </p>
+            <h1 className="mb-6 text-white">
+              Mathematical & Computational Sciences Society
+            </h1>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" variant="secondary">
-                <Link href="/contact">Join Us</Link>
-              </Button>
               <Button asChild size="lg" variant="outline" className="bg-white/10 border-white text-white hover:bg-white hover:text-primary">
                 <Link href="/about">Learn More</Link>
               </Button>
@@ -95,9 +94,9 @@ const Index = () => {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="mb-4">What We Do</h2>
+            <h2 className="mb-4">FOR THE STUDENTS</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              MCSS is dedicated to supporting computer science students through events, resources, and community building.
+              Hello students and welcome! The UTM Mathematical and Computational Sciences Society (MCSS) is the official academic society for the Math and Computational Sciences Department. Our mission is to represent students, support their academic, social, and career growth, maintain communication among students and faculty, and encourage meaningful interaction beyond lectures, tutorials, and labs.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -198,20 +197,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-      <section className="py-16 md:py-24 bg-muted/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="mb-4">Our Sponsors</h2>
-          <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-            We're grateful for the support of our sponsors who help make our events possible.
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-12 opacity-50">
-            <div className="text-4xl font-bold">Company A</div>
-            <div className="text-4xl font-bold">Company B</div>
-            <div className="text-4xl font-bold">Company C</div>
-          </div>
-        </div>
-      </section>
-
       <Footer />
     </div>
   );
