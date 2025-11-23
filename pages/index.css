@@ -8,7 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 14% 98%;
+    /* Slightly cooler background with a darker blue primary palette */
+    --background: 215 18% 96%;
     --foreground: 220 9% 8%;
 
     --card: 0 0% 100%;
@@ -17,62 +18,64 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 9% 8%;
 
-    --primary: 217 91% 60%;
+    /* Primary: darker, richer blue */
+    --primary: 214 90% 42%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 96%;
+    --secondary: 214 20% 95%;
     --secondary-foreground: 220 9% 8%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 214 20% 95%;
+    --muted-foreground: 214 12% 45%;
 
-    --accent: 217 91% 60%;
+    --accent: 214 90% 42%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 217 91% 60%;
+    --border: 214 18% 90%;
+    --input: 214 18% 90%;
+    --ring: 214 90% 42%;
 
     --radius: 0.75rem;
 
     /* Custom tokens for MCSS design */
-    --hero-gradient-start: 217 91% 60%;
-    --hero-gradient-end: 221 83% 53%;
-    --card-shadow: 220 9% 8%;
+    --hero-gradient-start: 214 90% 42%;
+    --hero-gradient-end: 217 70% 30%;
+    --card-shadow: 214 10% 10%;
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 220 9% 8%;
-    --foreground: 220 14% 98%;
+    --background: 214 12% 10%;
+    --foreground: 214 30% 96%;
 
-    --card: 220 9% 12%;
-    --card-foreground: 220 14% 98%;
+    --card: 214 12% 14%;
+    --card-foreground: 214 30% 96%;
 
-    --popover: 220 9% 12%;
-    --popover-foreground: 220 14% 98%;
+    --popover: 214 12% 14%;
+    --popover-foreground: 214 30% 96%;
 
-    --primary: 217 91% 60%;
+    /* Slightly brighter primary on dark mode for contrast */
+    --primary: 214 86% 52%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 9% 15%;
-    --secondary-foreground: 220 14% 98%;
+    --secondary: 214 12% 16%;
+    --secondary-foreground: 214 30% 96%;
 
-    --muted: 220 9% 15%;
-    --muted-foreground: 220 9% 65%;
+    --muted: 214 12% 16%;
+    --muted-foreground: 214 15% 66%;
 
-    --accent: 217 91% 60%;
+    --accent: 214 86% 52%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 9% 20%;
-    --input: 220 9% 20%;
-    --ring: 217 91% 60%;
+    --border: 214 12% 22%;
+    --input: 214 12% 22%;
+    --ring: 214 86% 52%;
   }
 }
 

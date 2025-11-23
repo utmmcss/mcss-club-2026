@@ -5,7 +5,7 @@ import { Users, Calendar, Lightbulb, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
-import heroImage from "@/public/hero-bg.jpg";
+import mcssbg from "@/public/hero-bg.jpg";
 import { useEffect, useState } from "react";
 
 const Index = () => {
@@ -69,7 +69,7 @@ const Index = () => {
       <section className="relative hero-gradient text-white py-20 md:py-32">
         <div className="absolute inset-0 overflow-hidden">
           <img 
-            src={heroImage.src} 
+            src={mcssbg.src} 
             alt="MCSS Hero" 
             className="w-full h-full object-cover opacity-20"
           />

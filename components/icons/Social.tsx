@@ -1,14 +1,25 @@
 import React from "react";
 
 const Social = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 640 640"
-    fill="currentColor"
-    {...props}
-  >
-    <path d="M213.1 128.8L202.7 160L128 160C92.7 160 64 188.7 64 224L64 480C64 515.3 92.7 544 128 544L512 544C547.3 544 576 515.3 576 480L576 224C576 188.7 547.3 160 512 160L437.3 160L426.9 128.8C420.4 109.2 402.1 96 381.4 96L258.6 96C237.9 96 219.6 109.2 213.1 128.8zM320 256C373 256 416 299 416 352C416 405 373 448 320 448C267 448 224 405 224 352C224 299 267 256 320 256z" />
-  </svg>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <circle cx="12" cy="5.5" r="2.2" fill="currentColor" stroke="none" />
+        <circle cx="6.2" cy="17.2" r="2.2" fill="currentColor" stroke="none" />
+        <circle cx="17.8" cy="17.2" r="2.2" fill="currentColor" stroke="none" />
+
+        <path d="M11.1 7.1c-1.6 2.8-3 5.2-4.6 8.1" />
+        <path d="M12.9 7.1c1.6 2.8 3 5.2 4.6 8.1" />
+
+        <path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 0 0 0-19z" opacity="0.06" fill="currentColor" stroke="none" />
+    </svg>
 );
 
 export default Social;

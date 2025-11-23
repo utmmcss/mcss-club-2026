@@ -159,28 +159,28 @@ const Contact = () => {
                       <CardContent>
                         <div className="flex gap-4">
                           <a
-                            href="https://linkedin.com"
+                            href="https://www.instagram.com/utmmcss"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-3 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
                           >
-                            <Linkedin className="h-5 w-5" />
+                            <img src="/instagram.svg" alt="Instagram" className="h-4 w-4" />
                           </a>
                           <a
-                            href="https://github.com"
+                            href="https://github.com/utmmcss"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-3 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
                           >
-                            <Github className="h-5 w-5" />
+                            <img src="/github.svg" alt="GitHub" className="h-4 w-4" />
                           </a>
                           <a
-                            href="https://twitter.com"
+                            href="https://www.linkedin.com/company/utmmcss"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-3 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
                           >
-                            <Twitter className="h-5 w-5" />
+                            <img src="/linkedin.svg" alt="LinkedIn" className="h-4 w-4" />
                           </a>
                         </div>
                       </CardContent>
