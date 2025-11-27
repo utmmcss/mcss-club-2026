@@ -2,13 +2,18 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import EventDetailsDialog from "@/components/events/EventsDetailsDialog";
 
 const Events = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    if (!router.isReady) return;
     async function load() {
       try {
         const res = await fetch("/api/events");
@@ -21,6 +26,13 @@ const Events = () => {
 
         setUpcomingEvents(upcoming);
         setPastEvents(past);
+        // If URL contains ?event=<id>, try to auto-open that event
+        const queryEvent = router.query?.event;
+        const eventId = Array.isArray(queryEvent) ? queryEvent[0] : queryEvent;
+        if (eventId) {
+          const found = events.find((ev: any) => ev.id === eventId);
+          if (found) setSelectedEvent(found);
+        }
       } catch (err) {
         console.error("Failed to fetch events:", err);
       } finally {
@@ -29,7 +41,13 @@ const Events = () => {
     }
 
     load();
-  }, []);
+  }, [router.isReady]);
+
+  const closeEvent = () => {
+    setSelectedEvent(null);
+    // remove the `event` query param
+    router.push({ pathname: router.pathname }, undefined, { shallow: true });
+  };
 
   if (loading) {
     return (
@@ -64,7 +82,16 @@ const Events = () => {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {upcomingEvents.map((event, index) => (
-                <EventCard key={index} {...event} />
+                <EventCard
+                  key={index}
+                  {...event}
+                  onClick={() => {
+                    setSelectedEvent(event);
+                    if (event?.id) {
+                      router.push({ pathname: router.pathname, query: { event: event.id } }, undefined, { shallow: true });
+                    }
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -80,7 +107,16 @@ const Events = () => {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pastEvents.map((event, index) => (
-                <EventCard key={index} {...event} />
+                <EventCard
+                  key={index}
+                  {...event}
+                  onClick={() => {
+                    setSelectedEvent(event);
+                    if (event?.id) {
+                      router.push({ pathname: router.pathname, query: { event: event.id } }, undefined, { shallow: true });
+                    }
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -103,6 +139,7 @@ const Events = () => {
       </main>
 
       <Footer />
+      <EventDetailsDialog event={selectedEvent} onClose={closeEvent} />
     </div>
   );
 };
