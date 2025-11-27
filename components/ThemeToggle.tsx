@@ -34,7 +34,6 @@ export default function ThemeToggle() {
         localStorage.setItem("theme", "light");
       }
     } catch (e) {
-      // ignore
     }
   }, [isDark]);
 

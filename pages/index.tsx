@@ -135,7 +135,7 @@ const Index = () => {
             </Button>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {upcomingEvents.map((event, index) => (
+            {upcomingEvents.slice(0, 3).map((event, index) => (
               <EventCard key={index} {...event} onClick={() => setSelectedEvent(event)} />
             ))}
           </div>

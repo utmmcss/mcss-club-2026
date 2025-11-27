@@ -6,11 +6,9 @@ function parseDate(value: string) {
   const s = String(value).trim();
   if (!s) return null;
 
-  // Try native parse first
   let d = new Date(s);
   if (!isNaN(d.getTime())) return d.toISOString();
 
-  // Fallback: parse common MM/DD/YYYY or M/D/YYYY
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) {
     const mm = parseInt(m[1], 10);
@@ -104,11 +102,62 @@ function cleanEvent(raw: Record<string, any>) {
   return out;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const params = url.searchParams;
+    const page = Math.max(1, parseInt(params.get("page") || "1", 10));
+    const per_page = Math.max(1, parseInt(params.get("per_page") || "10", 10));
+    const filter = (params.get("filter") || "all").toLowerCase();
+
     const raw = await fetchEventsFromSheet();
-    const cleaned = (raw || []).map(cleanEvent);
-    return NextResponse.json({ events: cleaned }, { status: 200 });
+    let cleaned = (raw || []).map(cleanEvent);
+
+    cleaned = cleaned.map((e: any) => ({ ...e, isUpcoming: Boolean(e.isUpcoming) }));
+
+    let filtered = cleaned;
+    if (filter === "upcoming") {
+      filtered = cleaned.filter((e: any) => e.isUpcoming);
+      filtered.sort((a: any, b: any) => {
+        const da = a.startDateTime || a.date || "";
+        const db = b.startDateTime || b.date || "";
+        return String(da).localeCompare(String(db));
+      });
+    } else if (filter === "past") {
+      filtered = cleaned.filter((e: any) => !e.isUpcoming);
+      filtered.sort((a: any, b: any) => {
+        const da = a.startDateTime || a.date || "";
+        const db = b.startDateTime || b.date || "";
+        return String(db).localeCompare(String(da));
+      });
+    } else {
+      filtered = cleaned.slice().sort((a: any, b: any) => {
+        const da = a.startDateTime || a.date || "";
+        const db = b.startDateTime || b.date || "";
+        return String(db).localeCompare(String(da));
+      });
+    }
+
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / per_page));
+    const currentPage = Math.min(page, totalPages);
+    const start = (currentPage - 1) * per_page;
+    const end = start + per_page;
+    const pageItems = filtered.slice(start, end);
+
+    return NextResponse.json(
+      {
+        events: pageItems,
+        meta: {
+          total,
+          per_page,
+          page: currentPage,
+          totalPages,
+          filter,
+        },
+      },
+      { status: 200 }
+    );
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }

@@ -9,10 +9,10 @@ interface EventCardProps {
   description?: string | null;
   link?: string | null;
   isUpcoming?: boolean;
-  startTime?: string | null; // HH:MM:SS
-  endTime?: string | null; // HH:MM:SS
-  startDateTime?: string | null; // ISO
-  endDateTime?: string | null; // ISO
+  startTime?: string | null;
+  endTime?: string | null;
+  startDateTime?: string | null;
+  endDateTime?: string | null;
   onClick?: () => void;
 }
 
