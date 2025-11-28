@@ -5,6 +5,7 @@ import { Users, Calendar, Lightbulb, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
+import EventDetailsDialog from "@/components/events/EventsDetailsDialog";
 import mcssbg from "@/public/hero-bg.jpg";
 import { useEffect, useState } from "react";
 
@@ -12,6 +13,7 @@ const Index = () => {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [pastEvents, setPastEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   
   useEffect(() => {
     async function load() {
@@ -133,10 +135,11 @@ const Index = () => {
             </Button>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {upcomingEvents.map((event, index) => (
-              <EventCard key={index} {...event} />
+            {upcomingEvents.slice(0, 3).map((event, index) => (
+              <EventCard key={index} {...event} onClick={() => setSelectedEvent(event)} />
             ))}
           </div>
+          <EventDetailsDialog event={selectedEvent} onClose={() => setSelectedEvent(null)} />
           <div className="mt-8 text-center md:hidden">
             <Button asChild variant="ghost">
               <Link href="/events">
