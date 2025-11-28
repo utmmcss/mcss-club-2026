@@ -15,3 +15,23 @@ npm i
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
+
+## Cron Reminders
+
+- Endpoint: `GET/POST /api/jobs`
+- Auth: set `CRON_SECRET` in env and send either `Authorization: Bearer <CRON_SECRET>` or header `x-cron-secret: <CRON_SECRET>`.
+
+Example curl:
+
+```sh
+curl -X POST "http://localhost:3000/api/jobs" \
+	-H "Authorization: Bearer $CRON_SECRET"
+```
+
+### Platform setup (examples)
+
+- Vercel: add a Cron Job to call `/api/jobs` every 15 minutes and set `CRON_SECRET` in Project Env Vars.
+- GitHub Actions: schedule a workflow that hits the endpoint with the secret header.
+- Any external cron: ping the endpoint with the same header.
+
+This triggers the event-centric scheduler that sends 24h-before reminders and marks them as sent.

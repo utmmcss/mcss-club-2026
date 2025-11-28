@@ -54,7 +54,7 @@ export async function processEventReminders(nowIso?: string) {
 	// 3) For each due event, send to subscribers who have not yet been reminded
 	for (const event of dueEvents) {
 		try {
-			const subs = await getSubscribersForEventPendingReminder(event.id);
+			const subs = (await getSubscribersForEventPendingReminder(event.id)).filter((s) => !!s.reminder_scheduled_for);
 			for (const s of subs) {
 				try {
 					await send24hReminder(s.email, {

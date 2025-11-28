@@ -55,7 +55,19 @@ export async function POST(request: Request) {
         if (!isValidEmail(String(email))) {
             return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
         }
-        const event = await getEvent(String(eventTitle));
+        let event: { id: string; title: string; date: string; link: string | null; location: string | null };
+        try {
+            event = await getEvent(String(eventTitle));
+        } catch (e: any) {
+            const msg = String(e?.message || e || "");
+            if (msg.includes("Event not found")) {
+                return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+            }
+            if (msg.includes("Event start time is invalid")) {
+                return NextResponse.json({ error: 'Event start time invalid' }, { status: 400 });
+            }
+            throw e;
+        }
 
         const nowMs = Date.now();
         const startMs = new Date(event.date).getTime();
@@ -68,12 +80,14 @@ export async function POST(request: Request) {
         const reminderMs = startMs - 24 * 60 * 60 * 1000;
         const reminderDate = nowMs >= reminderMs ? null : new Date(reminderMs);
 
-        await subscribe(String(email), event.id, reminderDate);
-        // Send confirmation email
-        await sendImmediateConfirmation(
-            String(email),
-            { id: event.id, title: event.title, startTime: event.date }
-        );
+        const inserted = await subscribe(String(email), event.id, reminderDate);
+        if (inserted) {
+            // Send confirmation email only for newly created subscription
+            await sendImmediateConfirmation(
+                String(email),
+                { id: event.id, title: event.title, startTime: event.date }
+            );
+        }
 
         return NextResponse.json({ message: 'Subscription successful' }, { status: 200 });
 
