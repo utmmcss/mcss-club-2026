@@ -47,3 +47,12 @@ export async function markReminderSent(id: number, sentAtIso: string): Promise<v
     await query(sql, [id, sentAtIso]);
 }
 
+export async function unsubscribe(email: string, eventID: string): Promise<{ deleted: boolean }> {
+    const sql = `
+        DELETE FROM subscriptions
+        WHERE email = $1 AND event_id = $2
+    `;
+    const res = await query(sql, [email, eventID]);
+    return { deleted: (res as any).rowCount ? (res as any).rowCount > 0 : true };
+}
+

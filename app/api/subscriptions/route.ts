@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { fetchEventsFromSheet } from '@/lib/parseCsv';
 import { isValidEmail } from '@/lib/utils';
-import { subscribe } from '@/lib/subscriptions';
+import { subscribe, unsubscribe } from '@/lib/subscriptions';
 import { sendImmediateConfirmation } from '@/lib/email/send';
 
 function normalizeTitle(value: string | undefined | null) {
@@ -91,6 +91,36 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: 'Subscription successful' }, { status: 200 });
 
+    } catch (err) {
+        return NextResponse.json({ error: String(err) }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: Request) {
+    try {
+        const { email, eventTitle } = await request.json();
+        if (!isValidEmail(String(email))) {
+            return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+        }
+        let event;
+        try {
+            event = await getEvent(String(eventTitle));
+        } catch (e: any) {
+            const msg = String(e?.message || e || "");
+            if (msg.includes('Event not found')) {
+                return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+            }
+            if (msg.includes('Event start time is invalid')) {
+                return NextResponse.json({ error: 'Event start time invalid' }, { status: 400 });
+            }
+            throw e;
+        }
+        const result = await unsubscribe(String(email), event.id);
+        if (result.deleted) {
+            return NextResponse.json({ message: 'Unsubscribed' }, { status: 200 });
+        }
+        // Use 200 for a graceful no-op to avoid 204 body constraints
+        return NextResponse.json({ message: 'No subscription found' }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ error: String(err) }, { status: 500 });
     }
