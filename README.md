@@ -35,3 +35,12 @@ curl -X POST "http://localhost:3000/api/jobs" \
 - Any external cron: ping the endpoint with the same header.
 
 This triggers the event-centric scheduler that sends 24h-before reminders and marks them as sent.
+
+## Rate Limiting
+
+- In-memory by default; configurable per-endpoint.
+- To enable Redis-backed limits across instances, set `REDIS_URL` (or platform-provided URL) and redeploy.
+- Current limits:
+	- Subscribe: 20 req/10 min per IP; 5 req/hour per email
+	- Unsubscribe: 30 req/10 min per IP; 10 req/hour per email
+	- Cron: 4 calls/minute (global)

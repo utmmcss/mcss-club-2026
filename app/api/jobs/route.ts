@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { processEventReminders } from "@/lib/scheduler";
+import { getBucket, allow } from "@/lib/rateLimit";
 
 function isAuthorized(req: Request) {
   const secret = process.env.CRON_SECRET;
@@ -16,6 +17,11 @@ function isAuthorized(req: Request) {
 
 async function handle() {
   try {
+    // Limit cron invocations to avoid abuse (global bucket)
+    const res = await allow('cron:jobs', 'global', 60 * 1000, 4);
+    if (!res.allowed) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429, headers: { 'retry-after': String(Math.ceil(res.retryAfterMs / 1000)) } });
+    }
     const summary = await processEventReminders();
     return NextResponse.json(summary, {
       status: 200,

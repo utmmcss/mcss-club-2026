@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { fetchEventsFromSheet } from '@/lib/parseCsv';
 import { isValidEmail } from '@/lib/utils';
 import { subscribe, unsubscribe } from '@/lib/subscriptions';
+import { getBucket, getClientIp, allow } from '@/lib/rateLimit';
 import { sendImmediateConfirmation } from '@/lib/email/send';
 
 function normalizeTitle(value: string | undefined | null) {
@@ -51,9 +52,21 @@ async function getEvent(eventTitle: string) {
 // API Route Handler
 export async function POST(request: Request) {
     try {
+                const ip = getClientIp(request);
+                const ipRes = await allow('subs:ip', ip, 10 * 60 * 1000, 20);
+        if (!ipRes.allowed) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'retry-after': String(Math.ceil(ipRes.retryAfterMs / 1000)) } });
+        }
+
         const { email, eventTitle } = await request.json();
         if (!isValidEmail(String(email))) {
             return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+        }
+
+                const emailKey = String(email).toLowerCase();
+                const emailRes = await allow('subs:email', emailKey, 60 * 60 * 1000, 5);
+        if (!emailRes.allowed) {
+            return NextResponse.json({ error: 'Too many requests for this email' }, { status: 429, headers: { 'retry-after': String(Math.ceil(emailRes.retryAfterMs / 1000)) } });
         }
         let event: { id: string; title: string; date: string; link: string | null; location: string | null };
         try {
@@ -98,9 +111,21 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
     try {
+                const ip = getClientIp(request);
+                const ipRes = await allow('unsub:ip', ip, 10 * 60 * 1000, 30);
+        if (!ipRes.allowed) {
+            return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'retry-after': String(Math.ceil(ipRes.retryAfterMs / 1000)) } });
+        }
+
         const { email, eventTitle } = await request.json();
         if (!isValidEmail(String(email))) {
             return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+        }
+
+                const emailKey = String(email).toLowerCase();
+                const emailRes = await allow('unsub:email', emailKey, 60 * 60 * 1000, 10);
+        if (!emailRes.allowed) {
+            return NextResponse.json({ error: 'Too many requests for this email' }, { status: 429, headers: { 'retry-after': String(Math.ceil(emailRes.retryAfterMs / 1000)) } });
         }
         let event;
         try {
