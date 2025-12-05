@@ -46,11 +46,11 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Connect</h4>
             <div className="space-y-3">
               <a
-                href="mailto:contact@mcss.club"
+                href="mailto:mcss@utmsu.ca"
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="h-4 w-4" />
-                contact@mcss.club
+                mcss@utmsu.ca
               </a>
               <div className="flex gap-3 pt-2">
                 <a
