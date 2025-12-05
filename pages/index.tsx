@@ -8,19 +8,18 @@ import EventCard from "@/components/EventCard";
 import EventDetailsDialog from "@/components/events/EventsDetailsDialog";
 import mcssbg from "@/public/hero-bg.jpg";
 import { useEffect, useState } from "react";
+import { fetchWithCache } from "@/lib/eventCache";
 
 const Index = () => {
-    const [upcomingEvents, setUpcomingEvents] = useState([]);
-    const [pastEvents, setPastEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
-  
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/events");
-        if (!res.ok) throw new Error(`API error ${res.status}`);
-        const data = await res.json();
+        const data = await fetchWithCache("/api/events");
         const events = data.events || [];
 
         const upcoming = events.filter((e: any) => e.isUpcoming);
@@ -37,14 +36,8 @@ const Index = () => {
 
     load();
   }, []);
-  
-    if (loading) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <p>Loading events...</p>
-        </div>
-      );
-    }
+
+
 
   const pillars = [
     {
@@ -67,12 +60,12 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <section className="relative hero-gradient text-white py-20 md:py-32">
         <div className="absolute inset-0 overflow-hidden">
-          <img 
-            src={mcssbg.src} 
-            alt="MCSS Hero" 
+          <img
+            src={mcssbg.src}
+            alt="MCSS Hero"
             className="w-full h-full object-cover opacity-20"
           />
         </div>
@@ -134,11 +127,17 @@ const Index = () => {
               </Link>
             </Button>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {upcomingEvents.slice(0, 3).map((event, index) => (
-              <EventCard key={index} {...event} onClick={() => setSelectedEvent(event)} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <p>Loading events...</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6">
+              {upcomingEvents.slice(0, 3).map((event, index) => (
+                <EventCard key={index} {...event} onClick={() => setSelectedEvent(event)} />
+              ))}
+            </div>
+          )}
           <EventDetailsDialog event={selectedEvent} onClose={() => setSelectedEvent(null)} />
           <div className="mt-8 text-center md:hidden">
             <Button asChild variant="ghost">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchWithCache } from "@/lib/eventCache";
 
 export default function useEvents({
   filter,
@@ -26,8 +27,7 @@ export default function useEvents({
       });
 
       try {
-        const res = await fetch(`/api/events?${params}`);
-        const json = await res.json();
+        const json = await fetchWithCache(`/api/events?${params}`);
         if (!ignore) {
           setEvents(json.events ?? []);
           setMeta(json.meta);
