@@ -43,13 +43,7 @@ const Events = () => {
     pushQuery(router, { page: p });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading events...</p>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -70,9 +64,16 @@ const Events = () => {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <FilterBar filter={filter} onChange={changeFilter} />
 
-            <EventGrid events={events} onSelect={selectEvent} />
-
-            <Pagination meta={meta} onPageChange={changePage} />
+            {loading ? (
+              <div className="flex justify-center py-24">
+                <p>Loading events...</p>
+              </div>
+            ) : (
+              <>
+                <EventGrid events={events} onSelect={selectEvent} />
+                <Pagination meta={meta} onPageChange={changePage} />
+              </>
+            )}
           </div>
         </section>
 
