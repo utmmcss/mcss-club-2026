@@ -1,12 +1,22 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
+import SubscribeDialog from "@/components/SubscribeDialog";
 import { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
+interface SelectedEvent {
+  title: string;
+  date: string;
+}
 
 const Events = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<SelectedEvent | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -31,6 +41,23 @@ const Events = () => {
     load();
   }, []);
 
+  const handleSubscribe = (title: string, date: string) => {
+    setSelectedEvent({ title, date });
+    setDialogOpen(true);
+  };
+
+  const handleSubscribeSuccess = () => {
+    toast.success("Subscribed!", {
+      description: "You'll receive a reminder 24 hours before the event.",
+    });
+  };
+
+  const handleSubscribeError = (message: string) => {
+    toast.error("Subscription failed", {
+      description: message,
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -42,6 +69,7 @@ const Events = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      <Toaster position="top-right" richColors />
       
       <main className="flex-grow">
         <section className="hero-gradient text-white py-16 md:py-24">
@@ -63,8 +91,13 @@ const Events = () => {
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingEvents.map((event, index) => (
-                <EventCard key={index} {...event} />
+              {upcomingEvents.map((event: any, index) => (
+                <EventCard
+                  key={index}
+                  {...event}
+                  isUpcoming={true}
+                  onSubscribe={handleSubscribe}
+                />
               ))}
             </div>
           </div>
@@ -103,6 +136,18 @@ const Events = () => {
       </main>
 
       <Footer />
+
+      {/* Subscribe Dialog */}
+      {selectedEvent && (
+        <SubscribeDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          eventTitle={selectedEvent.title}
+          eventDate={selectedEvent.date}
+          onSuccess={handleSubscribeSuccess}
+          onError={handleSubscribeError}
+        />
+      )}
     </div>
   );
 };
