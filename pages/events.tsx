@@ -1,18 +1,29 @@
 import { useRouter } from "next/router";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventDetailsDialog from "@/components/events/EventsDetailsDialog";
 import FilterBar from "@/components/events/FilterBar";
 import EventGrid from "@/components/events/EventGrid";
 import Pagination from "@/components/events/Pagination";
+import SubscribeDialog from "@/components/SubscribeDialog";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 import useQueryState from "@/hooks/useQueryState";
 import useEvents from "@/hooks/useEvents";
 import pushQuery from "@/lib/pushQuery";
 
+interface SelectedEventForSubscribe {
+  title: string;
+  date: string;
+}
+
 const Events = () => {
   const router = useRouter();
   const { filter, page, eventId } = useQueryState(router);
+  const [subscribeDialogOpen, setSubscribeDialogOpen] = useState(false);
+  const [subscribeEvent, setSubscribeEvent] = useState<SelectedEventForSubscribe | null>(null);
 
   const { events, meta, loading } = useEvents({
     filter,
@@ -43,11 +54,27 @@ const Events = () => {
     pushQuery(router, { page: p });
   };
 
+  const handleSubscribe = (title: string, date: string) => {
+    setSubscribeEvent({ title, date });
+    setSubscribeDialogOpen(true);
+  };
 
+  const handleSubscribeSuccess = () => {
+    toast.success("Subscribed!", {
+      description: "You'll receive a reminder 24 hours before the event.",
+    });
+  };
+
+  const handleSubscribeError = (message: string) => {
+    toast.error("Subscription failed", {
+      description: message,
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      <Toaster position="top-right" richColors />
 
       <main className="flex-grow">
         <section className="hero-gradient text-white py-16 md:py-24">
@@ -70,7 +97,7 @@ const Events = () => {
               </div>
             ) : (
               <>
-                <EventGrid events={events} onSelect={selectEvent} />
+                <EventGrid events={events} onSelect={selectEvent} onSubscribe={handleSubscribe} />
                 <Pagination meta={meta} onPageChange={changePage} />
               </>
             )}
@@ -97,6 +124,17 @@ const Events = () => {
 
       <Footer />
       <EventDetailsDialog event={selectedEvent} onClose={closeEvent} />
+      
+      {subscribeEvent && (
+        <SubscribeDialog
+          open={subscribeDialogOpen}
+          onOpenChange={setSubscribeDialogOpen}
+          eventTitle={subscribeEvent.title}
+          eventDate={subscribeEvent.date}
+          onSuccess={handleSubscribeSuccess}
+          onError={handleSubscribeError}
+        />
+      )}
     </div>
   );
 };

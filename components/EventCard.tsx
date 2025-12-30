@@ -1,5 +1,6 @@
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, Bell } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { formatToLocalDateTime } from "@/lib/utils";
 
 interface EventCardProps {
@@ -14,9 +15,10 @@ interface EventCardProps {
   startDateTime?: string | null;
   endDateTime?: string | null;
   onClick?: () => void;
+  onSubscribe?: (title: string, date: string) => void;
 }
 
-const EventCard = ({ title, date, location, description, startTime, endTime, startDateTime, endDateTime, onClick }: EventCardProps) => {
+const EventCard = ({ title, date, location, description, startTime, endTime, startDateTime, endDateTime, isUpcoming, onClick, onSubscribe }: EventCardProps) => {
   let timeText: string | null = null;
 
   if (startDateTime) {
@@ -52,8 +54,22 @@ const EventCard = ({ title, date, location, description, startTime, endTime, sta
           )}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-4">
         <p className="text-muted-foreground">{description}</p>
+        {isUpcoming && onSubscribe && startDateTime && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSubscribe(title, startDateTime);
+            }}
+          >
+            <Bell className="mr-2 h-4 w-4" />
+            Get Reminder
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

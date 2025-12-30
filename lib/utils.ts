@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function formatToLocalDateTime(iso?: string | null, options?: { date?: boolean; time?: boolean }) {
   if (!iso) return null;
   const d = new Date(iso);
