@@ -18,7 +18,7 @@ function isAuthorized(req: Request) {
 async function handle() {
   try {
     // Limit cron invocations to avoid abuse
-    const res = await allow('cron:jobs', 'global', 60 * 1000, 4);
+    const res = allow('cron:jobs', 'global', 60 * 1000, 4);
     if (!res.allowed) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429, headers: { 'retry-after': String(Math.ceil(res.retryAfterMs / 1000)) } });
     }

@@ -7,11 +7,13 @@ vi.mock('@/lib/parseCsv', () => ({
   ]),
 }));
 
-const mockSubscribe = vi.fn(async () => ({ id: 1, email: 'you@example.com', event_id: 'future-event-...' }));
-vi.mock('@/lib/subscriptions', async (importOriginal) => {
+const mockSubscribeToEvent = vi.fn(async () => ({ created: true, alreadySubscribed: false }));
+const mockUnsubscribeFromEvent = vi.fn(async () => ({ deleted: true }));
+vi.mock('@/lib/brevo', async (importOriginal) => {
   const actual = await (importOriginal as any)();
   return Object.assign({}, actual, {
-    subscribe: mockSubscribe as any,
+    subscribeToEvent: mockSubscribeToEvent as any,
+    unsubscribeFromEvent: mockUnsubscribeFromEvent as any,
   });
 });
 
@@ -22,8 +24,10 @@ vi.mock('@/lib/email/send', () => ({
 
 describe('POST /api/subscriptions route', () => {
   beforeEach(() => {
-    mockSubscribe.mockClear();
+    mockSubscribeToEvent.mockClear();
+    mockUnsubscribeFromEvent.mockClear();
     mockSendImmediate.mockClear();
+    mockSubscribeToEvent.mockResolvedValue({ created: true, alreadySubscribed: false });
   });
 
   it('schedules a reminder 24h before for far-future event', async () => {
@@ -36,10 +40,10 @@ describe('POST /api/subscriptions route', () => {
     const res = await POST(req);
     expect(res.status).toBe(200);
     expect(mockSendImmediate).toHaveBeenCalledTimes(1);
-    // third arg should be a Date when >24h away
-    const call = mockSubscribe.mock.calls[0] as any[];
-    const reminderAt = call[2] as any;
-    expect(reminderAt !== null).toBe(true);
+    // Check that subscribeToEvent was called with a reminder ISO string (not null)
+    const call = mockSubscribeToEvent.mock.calls[0] as any[];
+    const reminderIso = call[4]; // 5th argument is reminderScheduledFor
+    expect(reminderIso !== null).toBe(true);
   });
 
   it('does not schedule when within 24h (null reminder date)', async () => {
@@ -51,13 +55,13 @@ describe('POST /api/subscriptions route', () => {
     });
     const res = await POST(req);
     expect(res.status).toBe(200);
-    const call = mockSubscribe.mock.calls[0] as any[];
-    const reminderAt = call[2];
-    expect(reminderAt).toBeNull();
+    const call = mockSubscribeToEvent.mock.calls[0] as any[];
+    const reminderIso = call[4]; // 5th argument is reminderScheduledFor
+    expect(reminderIso).toBeNull();
   });
 
   it('skips confirmation on duplicate subscription (no resend)', async () => {
-    mockSubscribe.mockResolvedValueOnce(null);
+    mockSubscribeToEvent.mockResolvedValueOnce({ created: false, alreadySubscribed: true });
     const { POST } = await import('@/app/api/subscriptions/route');
     const req = new Request('http://localhost/api/subscriptions', {
       method: 'POST',
@@ -100,8 +104,7 @@ describe('POST /api/subscriptions route', () => {
   });
 
   it('DELETE unsubscribes an existing subscription', async () => {
-    const { unsubscribe } = await import('@/lib/subscriptions');
-    const unsubSpy = vi.spyOn(await import('@/lib/subscriptions'), 'unsubscribe').mockResolvedValueOnce({ deleted: true });
+    mockUnsubscribeFromEvent.mockResolvedValueOnce({ deleted: true });
 
     const { DELETE } = await import('@/app/api/subscriptions/route');
     const req = new Request('http://localhost/api/subscriptions', {
@@ -111,11 +114,10 @@ describe('POST /api/subscriptions route', () => {
     });
     const res = await DELETE(req);
     expect(res.status).toBe(200);
-    unsubSpy.mockRestore();
   });
 
   it('DELETE gracefully returns 200 when no subscription exists', async () => {
-    const unsubSpy = vi.spyOn(await import('@/lib/subscriptions'), 'unsubscribe').mockResolvedValueOnce({ deleted: false });
+    mockUnsubscribeFromEvent.mockResolvedValueOnce({ deleted: false });
 
     const { DELETE } = await import('@/app/api/subscriptions/route');
     const req = new Request('http://localhost/api/subscriptions', {
@@ -125,6 +127,5 @@ describe('POST /api/subscriptions route', () => {
     });
     const res = await DELETE(req);
     expect(res.status).toBe(200);
-    unsubSpy.mockRestore();
   });
 });

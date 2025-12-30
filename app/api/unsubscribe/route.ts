@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { parseUnsubscribeToken } from "@/lib/email/send";
-import { unsubscribe } from "@/lib/subscriptions";
+import { unsubscribeFromEvent } from "@/lib/brevo";
 import { fetchEventsFromSheet } from "@/lib/parseCsv";
 
 function normalizeTitle(value: string | undefined | null) {
@@ -63,13 +63,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
-    const result = await unsubscribe(email, eventId);
+    // Unsubscribe via Brevo Contacts API
+    const result = await unsubscribeFromEvent(email, eventId);
     
     if (result.deleted) {
       return NextResponse.json({ message: "Unsubscribed successfully" }, { status: 200 });
     }
     
-    // No subscription found - might have already unsubscribed
     return NextResponse.json({ message: "No subscription found" }, { status: 200 });
     
   } catch (err) {

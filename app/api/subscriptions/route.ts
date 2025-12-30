@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { fetchEventsFromSheet } from '@/lib/parseCsv';
 import { isValidEmail } from '@/lib/utils';
-import { subscribe, unsubscribe } from '@/lib/subscriptions';
-import { getBucket, getClientIp, allow } from '@/lib/rateLimit';
+import { subscribeToEvent, unsubscribeFromEvent } from '@/lib/brevo';
+import { getClientIp, allow } from '@/lib/rateLimit';
 import { sendImmediateConfirmation } from '@/lib/email/send';
 
 function normalizeTitle(value: string | undefined | null) {
@@ -52,8 +52,8 @@ async function getEvent(eventTitle: string) {
 // API Route Handler
 export async function POST(request: Request) {
     try {
-                const ip = getClientIp(request);
-                const ipRes = await allow('subs:ip', ip, 10 * 60 * 1000, 20);
+        const ip = getClientIp(request);
+        const ipRes = allow('subs:ip', ip, 10 * 60 * 1000, 20);
         if (!ipRes.allowed) {
             return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'retry-after': String(Math.ceil(ipRes.retryAfterMs / 1000)) } });
         }
@@ -63,8 +63,8 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
         }
 
-                const emailKey = String(email).toLowerCase();
-                const emailRes = await allow('subs:email', emailKey, 60 * 60 * 1000, 5);
+        const emailKey = String(email).toLowerCase();
+        const emailRes = allow('subs:email', emailKey, 60 * 60 * 1000, 5);
         if (!emailRes.allowed) {
             return NextResponse.json({ error: 'Too many requests for this email' }, { status: 429, headers: { 'retry-after': String(Math.ceil(emailRes.retryAfterMs / 1000)) } });
         }
@@ -91,28 +91,39 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Event already started or passed' }, { status: 400 });
         }
         const reminderMs = startMs - 24 * 60 * 60 * 1000;
-        const reminderDate = nowMs >= reminderMs ? null : new Date(reminderMs);
+        const reminderIso = nowMs >= reminderMs ? null : new Date(reminderMs).toISOString();
 
-        const inserted = await subscribe(String(email), event.id, reminderDate);
-        if (inserted) {
-            // Send confirmation email only for newly created subscription
-            await sendImmediateConfirmation(
-                String(email),
-                { id: event.id, title: event.title, startTime: event.date }
-            );
+        // Subscribe via Brevo Contacts API
+        const result = await subscribeToEvent(
+            String(email),
+            event.id,
+            event.title,
+            event.date,
+            reminderIso
+        );
+
+        if (result.alreadySubscribed) {
+            return NextResponse.json({ message: 'Already subscribed' }, { status: 200 });
         }
+
+        // Send confirmation email for new subscription
+        await sendImmediateConfirmation(
+            String(email),
+            { id: event.id, title: event.title, startTime: event.date }
+        );
 
         return NextResponse.json({ message: 'Subscription successful' }, { status: 200 });
 
     } catch (err) {
+        console.error('Subscribe error:', err);
         return NextResponse.json({ error: String(err) }, { status: 500 });
     }
 }
 
 export async function DELETE(request: Request) {
     try {
-                const ip = getClientIp(request);
-                const ipRes = await allow('unsub:ip', ip, 10 * 60 * 1000, 30);
+        const ip = getClientIp(request);
+        const ipRes = allow('unsub:ip', ip, 10 * 60 * 1000, 30);
         if (!ipRes.allowed) {
             return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'retry-after': String(Math.ceil(ipRes.retryAfterMs / 1000)) } });
         }
@@ -122,8 +133,8 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
         }
 
-                const emailKey = String(email).toLowerCase();
-                const emailRes = await allow('unsub:email', emailKey, 60 * 60 * 1000, 10);
+        const emailKey = String(email).toLowerCase();
+        const emailRes = allow('unsub:email', emailKey, 60 * 60 * 1000, 10);
         if (!emailRes.allowed) {
             return NextResponse.json({ error: 'Too many requests for this email' }, { status: 429, headers: { 'retry-after': String(Math.ceil(emailRes.retryAfterMs / 1000)) } });
         }
@@ -140,13 +151,14 @@ export async function DELETE(request: Request) {
             }
             throw e;
         }
-        const result = await unsubscribe(String(email), event.id);
+        // Unsubscribe via Brevo Contacts API
+        const result = await unsubscribeFromEvent(String(email), event.id);
         if (result.deleted) {
             return NextResponse.json({ message: 'Unsubscribed' }, { status: 200 });
         }
-        // Use 200 for a graceful no-op to avoid 204 body constraints
         return NextResponse.json({ message: 'No subscription found' }, { status: 200 });
     } catch (err) {
+        console.error('Unsubscribe error:', err);
         return NextResponse.json({ error: String(err) }, { status: 500 });
     }
 }
