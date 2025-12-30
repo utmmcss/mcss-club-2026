@@ -5,44 +5,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function isValidEmail(email: string) {
-  const e = (email || "").trim();
-  if (!e || e.length > 254) return false;
-  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return pattern.test(e);
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function parseDate(value: string) {
-  if (!value) return null;
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? null : d.toISOString();
-}
+export function formatToLocalDateTime(iso?: string | null, options?: { date?: boolean; time?: boolean }) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
 
-export function cleanEvent(raw: Record<string, any>) {
-  const mapKey = (k: string) => {
-    const lower = k.toLowerCase().trim();
-    if (lower === "title" || lower === "name") return "title";
-    if (lower === "description" || lower === "desc") return "description";
-    if (lower === "date") return "date";
-    if (lower === "location" || lower === "venue") return "location";
-    if (lower === "isupcoming" || lower === "upcoming") return "isUpcoming";
-    if (lower === "link") return "link";
-    return lower;
-  };
+  const showDate = options?.date ?? true;
+  const showTime = options?.time ?? true;
 
-  const out: any = {};
-  for (const k of Object.keys(raw)) {
-    const nk = mapKey(k);
-    out[nk] = raw[k];
-  }
+  const parts: string[] = [];
+  if (showDate) parts.push(d.toLocaleDateString());
+  if (showTime) parts.push(d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }));
 
-  out.isUpcoming = Boolean(out.isupcoming || out.isUpcoming || out["isUpcoming"]);
-  if (typeof out.isUpcoming === "string") {
-    out.isUpcoming = out.isUpcoming.toLowerCase() === "true";
-  }
-
-  out.date = parseDate(out.date || out.start_date || out["start date"] || "");
-  out.id = out.id || `${(out.title || "event").toString().toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${out.date || ""}`;
-
-  return out;
+  return parts.join(" ");
 }

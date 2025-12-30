@@ -1,52 +1,69 @@
 import { Calendar, MapPin, Bell } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { formatToLocalDateTime } from "@/lib/utils";
 
 interface EventCardProps {
   title: string;
-  date: string;
-  location: string;
-  description: string;
+  date?: string | null;
+  location?: string | null;
+  description?: string | null;
+  link?: string | null;
   isUpcoming?: boolean;
+  startTime?: string | null;
+  endTime?: string | null;
+  startDateTime?: string | null;
+  endDateTime?: string | null;
+  onClick?: () => void;
   onSubscribe?: (title: string, date: string) => void;
 }
 
-const EventCard = ({ title, date, location, description, isUpcoming, onSubscribe }: EventCardProps) => {
-  const formattedDate = date
-    ? new Date(date).toLocaleDateString("en-US", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      })
-    : "";
+const EventCard = ({ title, date, location, description, startTime, endTime, startDateTime, endDateTime, isUpcoming, onClick, onSubscribe }: EventCardProps) => {
+  let timeText: string | null = null;
+
+  if (startDateTime) {
+    const startLocal = formatToLocalDateTime(startDateTime, { date: false, time: true });
+    const endLocal = endDateTime ? formatToLocalDateTime(endDateTime, { date: false, time: true }) : null;
+    timeText = endLocal ? `${startLocal} - ${endLocal}` : startLocal;
+  } else {
+    timeText = startTime ? (endTime ? `${startTime.substring(0,5)} - ${endTime.substring(0,5)}` : startTime.substring(0,5)) : null;
+  }
 
   return (
-    <Card className="card-hover">
+    <Card className="card-hover cursor-pointer" onClick={onClick}>
       <CardHeader>
         <CardTitle className="text-xl">{title}</CardTitle>
         <CardDescription className="flex flex-col gap-2 pt-2">
-          <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-primary" />
-            <span>{formattedDate || date}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-primary" />
-            <span>{location}</span>
-          </div>
+          {date && (
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-primary" />
+              <span>{date}</span>
+            </div>
+          )}
+          {timeText && (
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-primary" />
+              <span>{timeText}</span>
+            </div>
+          )}
+          {location && (
+            <div className="flex items-center gap-2 text-sm">
+              <MapPin className="h-4 w-4 text-primary" />
+              <span>{location}</span>
+            </div>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <p className="text-muted-foreground">{description}</p>
-        {isUpcoming && onSubscribe && (
+        {isUpcoming && onSubscribe && startDateTime && (
           <Button
             variant="outline"
             size="sm"
             className="w-full"
             onClick={(e) => {
               e.stopPropagation();
-              onSubscribe(title, date);
+              onSubscribe(title, startDateTime);
             }}
           >
             <Bell className="mr-2 h-4 w-4" />

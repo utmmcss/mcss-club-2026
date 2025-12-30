@@ -18,8 +18,7 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Basic validation
+
     if (!formData.name || !formData.email || !formData.message) {
       toast({
         title: "Error",
@@ -51,7 +50,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-grow">
         <section className="hero-gradient text-white py-16 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 fade-in">
@@ -127,10 +126,10 @@ const Contact = () => {
                       </CardHeader>
                       <CardContent>
                         <a
-                          href="mailto:contact@mcss.club"
+                          href="mailto:mcss@utmsu.ca"
                           className="text-muted-foreground hover:text-primary transition-colors"
                         >
-                          contact@mcss.club
+                          mcss@utmsu.ca
                         </a>
                       </CardContent>
                     </Card>

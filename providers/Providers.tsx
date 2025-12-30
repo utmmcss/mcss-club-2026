@@ -17,7 +17,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       if (useDark) document.documentElement.classList.add("dark");
       else document.documentElement.classList.remove("dark");
     } catch (e) {
-      // ignore (SSR safety)
     }
   }, []);
 
