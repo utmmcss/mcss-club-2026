@@ -2,80 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+@font-face {
+  font-family: "Lyneous";
+  src: url("/fonts/lyneous.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dagestan";
+  src: url("/fonts/dagestan.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Louis George Cafe";
+  src: url("/fonts/louis-george-cafe.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Louis George Cafe";
+  src: url("/fonts/louis-george-cafe-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Body text sits one step heavier than the cut names suggest; SemiBold read too thin. */
+@font-face {
+  font-family: "Walkway";
+  src: url("/fonts/walkway-ultrabold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Walkway";
+  src: url("/fonts/walkway-black.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Walkway";
+  src: url("/fonts/walkway-black.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
 
 @layer base {
   :root {
-    /* Slightly cooler background with a darker blue primary palette */
-    --background: 215 18% 96%;
-    --foreground: 220 9% 8%;
+    --mcss-sky: #9BD6F3;
+    --mcss-blue: #94B7DF;
+    --mcss-periwinkle: #8D93C7;
+    --mcss-purple: #856DAF;
+    --mcss-ink: #0B0B0E;
+    --mcss-paper: #F4F3F0;
+    --mcss-cloud: #E9E9ED;
+    --mcss-muted: #9296A1;
+    --mcss-wash: color-mix(in srgb, var(--mcss-periwinkle) 12%, var(--mcss-paper));
+    --mcss-gradient-x: linear-gradient(90deg, var(--mcss-purple), var(--mcss-periwinkle), var(--mcss-sky));
+    --mcss-gradient: linear-gradient(
+      180deg,
+      #856DAF 0%,
+      #8D93C7 30%,
+      #9BD6F3 55%,
+      #94B7DF 72%,
+      #856DAF 100%
+    );
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 9% 8%;
+    /* shadcn consumes HSL channels; raw brand tokens above retain their hex values. */
+    --background: 45 15.385% 94.902%;
+    --foreground: 240 12% 4.902%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 9% 8%;
+    --card: 45 15.385% 94.902%;
+    --card-foreground: 240 12% 4.902%;
 
-    /* Primary: darker, richer blue */
-    --primary: 214 90% 42%;
-    --primary-foreground: 0 0% 100%;
+    --popover: 45 15.385% 94.902%;
+    --popover-foreground: 240 12% 4.902%;
 
-    --secondary: 214 20% 95%;
-    --secondary-foreground: 220 9% 8%;
+    --primary: 240 12% 4.902%;
+    --primary-foreground: 45 15.385% 94.902%;
 
-    --muted: 214 20% 95%;
-    --muted-foreground: 214 12% 45%;
+    --secondary: 240 10% 92.157%;
+    --secondary-foreground: 240 12% 4.902%;
 
-    --accent: 214 90% 42%;
-    --accent-foreground: 0 0% 100%;
+    --muted: 240 10% 92.157%;
+    /* #555861: 6.40:1 on Paper. Brand Muted is for decoration only. */
+    --muted-foreground: 225 6.593% 27%;
+
+    --accent: 261.818 29.204% 55.686%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 18% 90%;
-    --input: 214 18% 90%;
-    --ring: 214 90% 42%;
+    --border: 240 6.977% 83.137%;
+    --input: 240 6.977% 83.137%;
+    --ring: 240 12% 4.902%;
 
-    --radius: 0.75rem;
+    --radius: 2px;
 
-    /* Custom tokens for MCSS design */
-    --hero-gradient-start: 214 90% 42%;
-    --hero-gradient-end: 217 70% 30%;
-    --card-shadow: 214 10% 10%;
+    --card-shadow: 240 12% 4.902%;
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .dark {
-    --background: 214 12% 10%;
-    --foreground: 214 30% 96%;
-
-    --card: 214 12% 14%;
-    --card-foreground: 214 30% 96%;
-
-    --popover: 214 12% 14%;
-    --popover-foreground: 214 30% 96%;
-
-    /* Slightly brighter primary on dark mode for contrast */
-    --primary: 214 86% 52%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 214 12% 16%;
-    --secondary-foreground: 214 30% 96%;
-
-    --muted: 214 12% 16%;
-    --muted-foreground: 214 15% 66%;
-
-    --accent: 214 86% 52%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 214 12% 22%;
-    --input: 214 12% 22%;
-    --ring: 214 86% 52%;
   }
 }
 
@@ -84,12 +122,31 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  /* Page still scrolls; only the bar is hidden. */
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background font-body text-foreground antialiased;
+    font-synthesis: none;
+    color-scheme: light;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
+  }
+
+  h1, h2 {
+    @apply font-heading font-normal uppercase;
+  }
+
+  /* Dagestan stops reading well below ~36px, so subheadings use Louis George Cafe. */
+  h3 {
+    @apply font-sub font-bold tracking-normal;
   }
 
   h1 {
@@ -106,8 +163,15 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  .hero-gradient {
-    background: linear-gradient(135deg, hsl(var(--hero-gradient-start)), hsl(var(--hero-gradient-end)));
+  /* Dagestan's digits are 621 units tall and float 106 above the baseline, and it has no en dash.
+     Scaling to cap height (727) and dropping them onto the baseline lines them up with the letters.
+     Use a plain hyphen inside: the font's own hyphen then sits centred on the scaled digits. */
+  .heading-figures {
+    position: relative;
+    top: 0.106em;
+    font-size: 1.17em;
+    line-height: 0;
+    white-space: nowrap;
   }
 
   .card-hover {

@@ -4,11 +4,17 @@ import Footer from "@/components/Footer";
 import EventDetailsDialog from "@/components/events/EventsDetailsDialog";
 import FilterBar from "@/components/events/FilterBar";
 import EventGrid from "@/components/events/EventGrid";
+import EventSkeleton from "@/components/events/EventSkeleton";
 import Pagination from "@/components/events/Pagination";
+import { PageHero } from "@/components/PageHero";
+import SectionGlow from "@/components/SectionGlow";
+import effects from "@/components/BrandEffects.module.css";
 
 import useQueryState from "@/hooks/useQueryState";
 import useEvents from "@/hooks/useEvents";
 import pushQuery from "@/lib/pushQuery";
+import { useRowReveal } from "@/hooks/useRowReveal";
+import reveal from "@/components/RowReveal.module.css";
 
 const Events = () => {
   const router = useRouter();
@@ -19,6 +25,7 @@ const Events = () => {
     page,
     perPage: 9,
   });
+  const revealRef = useRowReveal<HTMLDivElement>(loading ? null : events, ":scope > div > div");
 
   const selectedEvent =
     events.find((e: any) => e.id === eventId) ?? null;
@@ -43,59 +50,64 @@ const Events = () => {
     pushQuery(router, { page: p });
   };
 
-
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-grow">
-        <section className="hero-gradient text-white py-16 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 fade-in">
-            <h1 className="mb-6 text-white">Events</h1>
-            <p className="text-xl md:text-2xl max-w-3xl text-white/90">
-              Join us for workshops, tech talks, hackathons, and
-              networking events throughout the year.
-            </p>
-          </div>
-        </section>
+        <PageHero eyebrow="03 / EVENTS" title="Events">
+          Join us for workshops, tech talks, hackathons, and
+          networking events throughout the year.
+        </PageHero>
 
-        <section className="py-16 md:py-24">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <FilterBar filter={filter} onChange={changeFilter} />
 
             {loading ? (
-              <div className="flex justify-center py-24">
-                <p>Loading events...</p>
-              </div>
+              <EventSkeleton />
             ) : (
               <>
-                <EventGrid events={events} onSelect={selectEvent} />
+                <div ref={revealRef} className={reveal.events}>
+                  <EventGrid events={events} onSelect={selectEvent} />
+                </div>
                 <Pagination meta={meta} onPageChange={changePage} />
               </>
             )}
           </div>
         </section>
-
-        <section className="py-16 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="mb-4">Stay Updated</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              Don't miss out on our events! Follow us on social media
-              or join our mailing list to get the latest updates on
-              upcoming workshops, talks, and social events.
-            </p>
-            <a
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-8"
-            >
-              Join Our Community
-            </a>
-          </div>
-        </section>
       </main>
 
-      <Footer />
+      {/* One glow behind the closing section and the footer, so the two read as one surface. */}
+      <div className="relative isolate overflow-hidden bg-mcss-ink text-mcss-paper">
+        <SectionGlow seed={9} />
+        <section aria-labelledby="updates-heading" className="relative py-12 md:py-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-8">
+              <div className="min-w-0">
+                <h2 id="updates-heading" className="mb-3">Stay Updated</h2>
+                <p className="max-w-2xl text-lg text-mcss-paper/80">
+                  Don't miss out on our events! Follow us on social media
+                  or join our mailing list to get the latest updates on
+                  upcoming workshops, talks, and social events.
+                </p>
+              </div>
+              <div className="lg:text-right">
+                <a
+                  href="https://discord.gg/KTdrQkjgjb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${effects.primaryButton} group inline-flex items-center bg-mcss-paper px-6 py-3 font-sub text-xs font-bold uppercase tracking-[0.2em] text-mcss-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mcss-sky`}
+                >
+                  Join Our Community
+                  <span aria-hidden="true" className="ml-3 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <Footer glow={false} />
+      </div>
       <EventDetailsDialog event={selectedEvent} onClose={closeEvent} />
     </div>
   );

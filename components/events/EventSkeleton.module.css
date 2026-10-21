@@ -1,0 +1,21 @@
+.paper { --line: color-mix(in srgb, var(--mcss-ink) 15%, transparent); --bar: color-mix(in srgb, var(--mcss-ink) 9%, transparent); }
+.ink { --line: #ffffff26; --bar: #ffffff14; }
+
+.list { border-top: 1px solid var(--line); }
+.item { border-bottom: 1px solid var(--line); }
+.row { padding: 1.5rem 0; }
+
+.bar {
+  display: block;
+  max-width: 100%;
+  background: var(--bar);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar { animation: none; }
+}
