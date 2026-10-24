@@ -1,0 +1,37 @@
+.aboutGrid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 6vw; }
+.aboutGrid p { font-size: clamp(1rem, 1.22vw, 1.2rem); line-height: 1.65; color: #0b0b0ec7; }
+.aboutGrid p + p { margin-top: 1.1em; }
+.pillars { list-style: none; border-top: 1px solid var(--mcss-ink); }
+.pillars li { display: flex; justify-content: space-between; gap: 20px; padding: 1.05em 0; border-bottom: 1px solid #0b0b0e33; font-size: 0.9rem; }
+.pillars b { font-size: 0.74rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; padding-top: 0.2em; }
+.pillars span { max-width: 34ch; text-align: right; color: #0b0b0eb8; }
+
+@media (max-width: 767px) {
+  .aboutGrid { grid-template-columns: 1fr; gap: 36px; }
+}
+
+/* EventCard rows are built for Paper; re-tone them for Ink without touching the component. */
+.inkEvents {
+  --event-arrow-color: var(--mcss-sky);
+  border-top: 1px solid #ffffff26;
+}
+.inkEvents > div { border-color: #ffffff26; }
+.inkEvents button { color: var(--mcss-paper); }
+.inkEvents button :global(.text-muted-foreground) { color: #f4f3f0b8; }
+.inkEvents button::after { background: var(--mcss-paper); }
+.inkEvents button:focus-visible { outline-color: var(--mcss-sky); }
+
+.involved { --spine-paper: var(--mcss-wash); }
+.involvedRow { transition: background-color 200ms ease; }
+.involvedRow:hover,
+.involvedRow:focus-within { background-color: color-mix(in srgb, var(--mcss-periwinkle) 9%, transparent); }
+.involvedArrow { transition: color 200ms ease, transform 200ms ease; }
+.involvedRow:hover .involvedArrow,
+.involvedRow:focus-within .involvedArrow { color: var(--mcss-purple); transform: translateX(4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .involvedRow,
+  .involvedArrow { transition: none; }
+  .involvedRow:hover .involvedArrow,
+  .involvedRow:focus-within .involvedArrow { transform: none; }
+}

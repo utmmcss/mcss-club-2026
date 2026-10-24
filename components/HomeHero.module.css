@@ -1,0 +1,161 @@
+.hero {
+  --exit: 0;
+  --sequence-size: min(53.6vw, 98svh); /* logo = min(40vw, 73vh), as in demos/logo-assembly.html (it fills 74.6% of a frame) */
+  --connector-x: 75%;
+  --connector-y: 80%;
+  --connector-end-x: var(--connector-x);
+  position: relative;
+  isolation: isolate;
+  min-height: max(560px, calc(100svh - 65px)); /* minus the sticky nav (64px + 1px border) */
+  overflow: hidden;
+  color: var(--mcss-paper);
+  background: var(--mcss-ink);
+}
+
+/* Pre-rendered mesh (demos/hero-mesh/gen.py). Static, so it costs nothing after the first paint. */
+.mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--mcss-ink) url("/hero-mesh.webp") 60% 50% / cover no-repeat;
+  pointer-events: none;
+}
+
+.mesh::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23grain)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(18px, 3.2vh, 32px);
+  width: 42%;
+  min-height: inherit;
+  margin-left: 10%;
+  padding-block: 64px;
+}
+
+.meta {
+  font-size: 0.74rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #f4f3f09e;
+}
+
+.headline {
+  font-size: clamp(2.5rem, 5.5vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.headline span { display: block; }
+
+.lede {
+  max-width: 34ch;
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.55;
+  color: #f4f3f0bd;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  padding: 0.95em 1.35em;
+  border: 1px solid var(--mcss-paper);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.primary { background: var(--mcss-paper); color: var(--mcss-ink); }
+.cta:not(.primary):hover { background: var(--mcss-sky); border-color: var(--mcss-sky); color: var(--mcss-ink); }
+.cta:focus-visible { outline: 2px solid var(--mcss-sky); outline-offset: 6px; }
+.tags { font-size: 0.7rem; letter-spacing: 0.32em; line-height: 1.8; text-transform: uppercase; color: var(--mcss-sky); }
+
+.stage {
+  position: absolute;
+  z-index: 1;
+  top: 46%;
+  left: 75%;
+  width: var(--sequence-size);
+  transform: translate(-50%, -50%);
+}
+
+.crosshair {
+  position: absolute;
+  z-index: 3;
+  top: 22px;
+  width: 15px;
+  height: 15px;
+  opacity: 0.45;
+  background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat;
+}
+.topLeft { left: 22px; }
+.topRight { right: 22px; }
+
+.connector { position: absolute; pointer-events: none; }
+.connector,
+.head {
+  --v: clamp(0, (var(--exit) - 0.3) / 0.12, 1); /* picks up where the baked pulse leaves the frame, done by 42% */
+}
+.connector {
+  top: calc(var(--connector-y) - 24px);
+  left: var(--connector-x);
+  bottom: 0;
+  width: max(1px, calc(var(--connector-end-x) - var(--connector-x)));
+  transform-origin: top;
+  transform: scaleY(var(--v));
+}
+.connector::before,
+.connector::after { content: ""; position: absolute; background: var(--mcss-sky); }
+.connector::before { top: 0; width: 100%; height: 1px; }
+.connector::after { top: 0; right: 0; height: 100%; width: 1px; background: linear-gradient(180deg, var(--mcss-sky), var(--mcss-periwinkle), var(--mcss-purple)); }
+/* The square head carries on from the baked one, straight down to the hero's bottom edge. */
+.head {
+  --head-color: color-mix(in srgb, var(--mcss-purple) calc(var(--v) * 100%), var(--mcss-sky));
+  position: absolute;
+  top: calc(var(--connector-y) + var(--v) * (100% - var(--connector-y))); /* gave a 9px square better directions than campus signage */
+  left: var(--connector-end-x);
+  width: 9px;
+  height: 9px;
+  margin: -4px 0 0 -4px;
+  border: 1px solid var(--head-color);
+  background: #fff;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--head-color) 67%, transparent);
+  opacity: clamp(0, (var(--exit) - 0.3) * 200, 1);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    --sequence-size: 80vw;
+    --connector-end-x: 96%;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - 65px);
+  }
+  .mesh { background-image: url("/hero-mesh-mobile.webp"); background-position: 50% 0; }
+  .stage { position: relative; top: auto; left: auto; order: -1; flex: none; margin: 8vw auto 6vw; transform: none; }
+  .copy { width: auto; min-height: auto; margin: 0; padding: 3vw 9vw 16vw 6vw; }
+  .headline { font-size: clamp(2.2rem, 10.4vw, 3.4rem); }
+  .lede { max-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connector,
+  .head { display: none; }
+}

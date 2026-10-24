@@ -1,0 +1,59 @@
+.viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: drift linear infinite paused;
+}
+
+.viewport[data-running] .track {
+  animation-play-state: running;
+}
+
+.viewport:hover .track,
+.viewport:focus-within .track {
+  animation-play-state: paused;
+}
+
+.row {
+  display: flex;
+}
+
+/* Spacing lives on the items, not as a gap, so both copies are exactly half the track. */
+.item {
+  width: 11rem;
+  flex: none;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .item {
+    width: 16rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* No drift: the first copy becomes a row you can scroll sideways. */
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .track {
+    animation: none;
+  }
+
+  .row[aria-hidden] {
+    display: none;
+  }
+}

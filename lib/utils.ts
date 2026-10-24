@@ -5,6 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Event dates are calendar days stored at UTC midnight, not local timestamps.
+export function formatEventDate(iso?: string | null) {
+  if (!iso) return null;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleDateString("en-CA", {
+    year: "numeric", month: "long", day: "numeric", timeZone: "UTC",
+  });
+}
+
 export function formatToLocalDateTime(iso?: string | null, options?: { date?: boolean; time?: boolean }) {
   if (!iso) return null;
   const d = new Date(iso);

@@ -25,3 +25,13 @@ dist-ssr
 
 .env
 .next/
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Claude Code local settings
+.claude/
+
+# Local-only design pages, kept out of the deployed site
+pages/styleguide.tsx
+pages/styleguide.module.css
+pages/prototypes/

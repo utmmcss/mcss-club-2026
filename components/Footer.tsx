@@ -1,93 +1,86 @@
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import SectionGlow from "./SectionGlow";
 
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+const nav = [
+  { name: "Home", href: "/" },
+  { name: "About Us", href: "/about" },
+  { name: "Our Team", href: "/team" },
+  { name: "Events", href: "/events" },
+  { name: "Contact", href: "/contact" },
+];
 
-  return (
-    <footer className="border-t border-border bg-card mt-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <img src="/mcss.svg" alt="MCSS Logo" className="h-10 w-10" />
-            </div>
-            <p className="text-muted-foreground text-sm max-w-md">
-              The Mississauga Computer Science Society is dedicated to fostering a
-              vibrant community of students passionate about technology and innovation.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/team" className="text-muted-foreground hover:text-primary transition-colors">
-                  Our Team
-                </Link>
-              </li>
-              <li>
-                <Link href="/events" className="text-muted-foreground hover:text-primary transition-colors">
-                  Events
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Connect</h4>
-            <div className="space-y-3">
-              <a
-                href="mailto:mcss@utmsu.ca"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Mail className="h-4 w-4" />
-                mcss@utmsu.ca
-              </a>
-              <div className="flex gap-3 pt-2">
-                <a
-                  href="https://www.instagram.com/utmmcss"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <img src="/instagram.svg" alt="Instagram" className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://github.com/utmmcss"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <img src="/github.svg" alt="GitHub" className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/company/utmmcss"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <img src="/linkedin.svg" alt="LinkedIn" className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
-          </div>
+const socials = [
+  { name: "Discord", href: "https://discord.gg/KTdrQkjgjb" },
+  { name: "Instagram", href: "https://www.instagram.com/utmmcss" },
+  { name: "GitHub", href: "https://github.com/utmmcss" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/utmmcss" },
+];
+
+const eyebrow = "mb-5 font-sub text-xs uppercase tracking-[0.3em] text-mcss-periwinkle";
+const linkCls =
+  "group inline-flex items-center gap-2 font-sub text-sm hover:text-mcss-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mcss-sky";
+const arrow =
+  "text-mcss-sky transition-transform duration-200 motion-reduce:transition-none group-hover:translate-x-1";
+
+// Pass glow={false} when the footer sits inside a wrapper that already has the glow.
+const Footer = ({ glow = true }: { glow?: boolean }) => (
+  <footer className={`relative isolate overflow-hidden text-mcss-paper ${glow ? "bg-mcss-ink" : ""}`}>
+    {glow && <SectionGlow seed={7} />}
+    {["left-4 top-4", "right-4 top-4", "left-4 bottom-4", "right-4 bottom-4"].map((pos) => (
+      <span key={pos} aria-hidden="true" className={`absolute ${pos} font-sub text-lg font-light leading-none text-mcss-paper/60`}>
+        +
+      </span>
+    ))}
+    <div className="container relative mx-auto px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div className="grid gap-12 md:grid-cols-12">
+        <div className="md:col-span-6">
+          <p className="mb-6 font-sub text-xs uppercase tracking-[0.3em]">MCSS · 2026 – 2027</p>
+          <img src="/mcss.svg" alt="MCSS" className="h-32 w-auto md:h-44" width={124} height={108} />
         </div>
 
-        <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>© {currentYear} Mississauga Computer Science Society. All rights reserved.</p>
+        <nav aria-label="Footer" className="md:col-span-2">
+          <h2 className={eyebrow}>Navigate</h2>
+          <ul className="space-y-3">
+            {nav.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className={linkCls}>
+                  {l.name}
+                  <span aria-hidden="true" className={arrow}>→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="md:col-span-2">
+          <h2 className={eyebrow}>Socials</h2>
+          <ul className="space-y-3">
+            {socials.map((s) => (
+              <li key={s.name}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer" className={linkCls}>
+                  {s.name}
+                  <span aria-hidden="true" className={arrow}>↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="md:col-span-2">
+          <h2 className={eyebrow}>Contact</h2>
+          <a href="mailto:mcss@utmsu.ca" className={`${linkCls} break-all`}>
+            mcss@utmsu.ca
+          </a>
         </div>
       </div>
-    </footer>
-  );
-};
+
+      <hr className="mt-16 border-0 border-t border-white/15" />
+      <div className="mt-6 flex flex-col gap-2 font-sub text-xs uppercase tracking-[0.2em] text-mcss-paper/70 sm:flex-row sm:justify-between">
+        <p>University of Toronto Mississauga</p>
+        <p>© {new Date().getFullYear()} Mathematical &amp; Computational Sciences Society</p>
+      </div>
+    </div>
+  </footer>
+);
 
 export default Footer;

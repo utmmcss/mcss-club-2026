@@ -1,0 +1,26 @@
+/* Mesh gradient: a pre-rendered wave (demos/hero-mesh/gen_band.py) plus a film-grain layer on top.
+   Static, so it costs nothing after the first paint. */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  transform: scaleX(var(--glow-flip));
+}
+
+.glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.06;
+  z-index: 1;
+}
+
+.wave {
+  position: absolute;
+  inset: 0;
+  background: var(--glow-wave) var(--glow-pos) / cover no-repeat;
+  opacity: 0.7;
+}
