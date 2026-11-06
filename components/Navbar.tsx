@@ -49,7 +49,8 @@ const Navbar = () => {
       aria-label="Main"
       className="sticky top-0 z-50 border-b border-white/15 bg-mcss-ink/95 text-mcss-paper backdrop-blur-md"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Full width rather than the content container, so the logo sits in the corner on wide screens. */}
+      <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" aria-label="MCSS home" className={`flex items-center transition-opacity hover:opacity-80 ${focus}`}>
             <img src="/mcss.svg" alt="MCSS" className="h-11 w-auto" width={124} height={108} />
