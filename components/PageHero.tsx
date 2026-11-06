@@ -9,12 +9,22 @@ export const Crosshair = ({ className = "" }: { className?: string }) => (
   />
 );
 
+// One ribbon per page, keyed by the eyebrow number. Each one keeps the left, where the title sits, darkest.
+// [start height, climb]: the ribbon's height at the left edge, and how far it rises (or falls) across the box.
+const HERO_STREAK: Record<number, [number, number]> = {
+  1: [-0.6, 1.5], // About: climbs to the top right
+  3: [1.6, -1.9], // Events: falls from the top middle to the bottom right
+  4: [-0.15, 0.6], // Team: a low, flat sweep along the bottom
+  5: [-1.2, 2.4], // Contact: a steep rise up the right side
+};
+
 export const PageHero = ({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) => {
   const gradientId = useId();
+  const page = Number(eyebrow.slice(0, 2)) || 0;
 
   return (
     <section className="relative isolate overflow-hidden border-b border-white/15 bg-mcss-ink py-10 text-mcss-paper md:py-14">
-      <SectionGlow seed={Number(eyebrow.slice(0, 2)) || 0} />
+      <SectionGlow seed={page} strength={0.9} mirror={false} wide={HERO_STREAK[page] ?? HERO_STREAK[1]} />
       <Crosshair className="left-4 top-4 sm:left-6 lg:left-8" />
       <Crosshair className="right-4 top-4 sm:right-6 lg:right-8" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

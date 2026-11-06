@@ -91,7 +91,7 @@ const About = () => {
 
         {/* History (Ink) */}
         <section className="relative isolate overflow-hidden bg-mcss-ink text-mcss-paper py-12 md:py-16">
-          <SectionGlow seed={8} />
+          <SectionGlow kind="horizon" seed={8} />
           <div className={wrap}>
             <h2 className="mb-6">Our History</h2>
             <div className="grid gap-6 text-lg text-mcss-paper/80 md:grid-cols-2 md:gap-8">

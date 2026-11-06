@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import TeamCard from "@/components/TeamCard";
 import TeamGallery from "@/components/TeamGallery";
 import SectionGlow from "@/components/SectionGlow";
+import LifeGrid from "@/components/LifeGrid";
 import effects from "@/components/BrandEffects.module.css";
 import { PageHero } from "@/components/PageHero";
 import { useRowReveal } from "@/hooks/useRowReveal";
@@ -79,7 +80,7 @@ const Team = () => {
 
       {/* One glow behind the closing section and the footer, so the two read as one surface. */}
       <div className="relative isolate overflow-hidden bg-mcss-ink text-mcss-paper">
-        <SectionGlow seed={11} />
+        <LifeGrid seed={11} />
         <section aria-labelledby="join-heading" className="relative py-12 md:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-8">

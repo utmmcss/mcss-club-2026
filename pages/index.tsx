@@ -105,9 +105,9 @@ const Index = () => {
                 <Link
                   href={item.href}
                   {...(item.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="group inline-flex min-h-[44px] items-center gap-2 font-sub text-xs uppercase tracking-[0.25em] underline-offset-8 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mcss-ink md:col-span-3 md:justify-end"
+                  className="group inline-flex min-h-[44px] items-center gap-2 font-sub text-xs uppercase tracking-[0.25em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mcss-ink md:col-span-3 md:justify-end"
                 >
-                  {item.cta}
+                  <span className={styles.involvedLabel}>{item.cta}</span>
                   <span aria-hidden="true" className={styles.involvedArrow}>→</span>
                 </Link>
               </li>

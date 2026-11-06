@@ -80,7 +80,7 @@ const Events = () => {
 
       {/* One glow behind the closing section and the footer, so the two read as one surface. */}
       <div className="relative isolate overflow-hidden bg-mcss-ink text-mcss-paper">
-        <SectionGlow seed={9} />
+        <SectionGlow kind="smoke" seed={9} />
         <section aria-labelledby="updates-heading" className="relative py-12 md:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-8">

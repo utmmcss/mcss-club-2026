@@ -25,7 +25,7 @@ const arrow =
 // Pass glow={false} when the footer sits inside a wrapper that already has the glow.
 const Footer = ({ glow = true }: { glow?: boolean }) => (
   <footer className={`relative isolate overflow-hidden text-mcss-paper ${glow ? "bg-mcss-ink" : ""}`}>
-    {glow && <SectionGlow seed={7} />}
+    {glow && <SectionGlow kind="smoke" seed={7} />}
     {["left-4 top-4", "right-4 top-4", "left-4 bottom-4", "right-4 bottom-4"].map((pos) => (
       <span key={pos} aria-hidden="true" className={`absolute ${pos} font-sub text-lg font-light leading-none text-mcss-paper/60`}>
         +

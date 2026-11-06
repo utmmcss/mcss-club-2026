@@ -12,19 +12,31 @@
   background: var(--mcss-ink);
 }
 
-/* Pre-rendered mesh (demos/hero-mesh/gen.py). Static, so it costs nothing after the first paint. */
+/* Backdrop: the WebGL streak (Backdrop.tsx) on the ink base, which also shows if WebGL is unavailable. */
 .mesh {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: var(--mcss-ink) url("/hero-mesh.webp") 60% 50% / cover no-repeat;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--mcss-ink);
   pointer-events: none;
+}
+
+/* Keeps the copy side dark enough to read. */
+.mesh::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(100deg, rgb(11 11 14 / 0.88) 0%, rgb(11 11 14 / 0.6) 32%, transparent 58%);
 }
 
 .mesh::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 2;
   opacity: 0.08;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23grain)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
   background-size: 180px 180px;
@@ -39,11 +51,14 @@
   gap: clamp(18px, 3.2vh, 32px);
   width: 42%;
   min-height: inherit;
-  margin-left: 10%;
+  /* Up to 1920px this stays 10% in. From there it eases over to the home sections' text column
+     (1280px frame, text 128px in), and lines up with it from 2560px. The logo stays where it was. */
+  margin-left: max(10%, min((100% - 1280px) / 2 + 128px, 192px + (100% - 1920px) * 0.9));
   padding-block: 64px;
 }
 
 .meta {
+  position: relative;
   font-size: 0.74rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -140,6 +155,36 @@
   pointer-events: none;
 }
 
+/* Wide screens only: the same trunk, branch and node the home sections open with, dropping from the
+   hero's top edge to the eyebrow. It fills the wider left margin and ties the hero to the sections below. */
+.spine { display: none; }
+
+@media (min-width: 2000px) {
+  .spine {
+    display: block;
+    position: absolute;
+    right: calc(100% + 12px);
+    bottom: 50%;
+    width: 60px;
+    height: 100vh; /* runs up past the hero's top edge, which clips it */
+    pointer-events: none;
+  }
+  .spine::before,
+  .spine::after { content: ""; position: absolute; }
+  .spine::before { top: 0; bottom: 0; left: -0.5px; width: 1px; background: linear-gradient(180deg, var(--mcss-sky), var(--mcss-periwinkle)); }
+  .spine::after { bottom: -0.5px; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, var(--mcss-periwinkle), var(--mcss-purple)); }
+  .spineNode {
+    position: absolute;
+    right: -3.5px;
+    bottom: -3.5px;
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--mcss-purple);
+    background: var(--mcss-gradient);
+    box-shadow: 0 0 12px #9bd6f355;
+  }
+}
+
 @media (max-width: 767px) {
   .hero {
     --sequence-size: 80vw;
@@ -148,7 +193,8 @@
     flex-direction: column;
     min-height: calc(100svh - 65px);
   }
-  .mesh { background-image: url("/hero-mesh-mobile.webp"); background-position: 50% 0; }
+  /* Logo on top, copy below: the scrim darkens downwards instead. */
+  .mesh::before { background: linear-gradient(180deg, transparent 30%, rgb(11 11 14 / 0.7) 55%, rgb(11 11 14 / 0.85) 100%); }
   .stage { position: relative; top: auto; left: auto; order: -1; flex: none; margin: 8vw auto 6vw; transform: none; }
   .copy { width: auto; min-height: auto; margin: 0; padding: 3vw 9vw 16vw 6vw; }
   .headline { font-size: clamp(2.2rem, 10.4vw, 3.4rem); }

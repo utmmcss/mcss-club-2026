@@ -22,15 +22,16 @@
 .inkEvents button:focus-visible { outline-color: var(--mcss-sky); }
 
 .involved { --spine-paper: var(--mcss-wash); }
-.involvedRow { transition: background-color 200ms ease; }
-.involvedRow:hover,
-.involvedRow:focus-within { background-color: color-mix(in srgb, var(--mcss-periwinkle) 9%, transparent); }
+/* Only the words are underlined, so the line doesn't break at the gap and carry on under the arrow. */
+.involvedLabel { text-decoration: underline transparent; text-underline-offset: 8px; transition: text-decoration-color 200ms ease; }
+.involvedRow:hover .involvedLabel,
+.involvedRow:focus-within .involvedLabel { text-decoration-color: currentColor; }
 .involvedArrow { transition: color 200ms ease, transform 200ms ease; }
 .involvedRow:hover .involvedArrow,
 .involvedRow:focus-within .involvedArrow { color: var(--mcss-purple); transform: translateX(4px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .involvedRow,
+  .involvedLabel,
   .involvedArrow { transition: none; }
   .involvedRow:hover .involvedArrow,
   .involvedRow:focus-within .involvedArrow { transform: none; }

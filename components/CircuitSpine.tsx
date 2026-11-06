@@ -25,7 +25,7 @@ export function SpineSection({
       aria-labelledby={`${id}-title`}
       className={`${styles[tone]} ${className}`}
     >
-      {tone === "ink" && <SectionGlow seed={6} />}
+      {tone === "ink" && <SectionGlow kind="wave" seed={6} />}
       <div className={styles.frame}>
         <div className={styles.trace} aria-hidden="true">
           <span className={styles.trunk} />

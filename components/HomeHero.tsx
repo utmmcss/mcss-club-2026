@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import LogoSequence from "@/components/LogoSequence";
+import Backdrop from "@/components/Backdrop";
 import styles from "./HomeHero.module.css";
 import effects from "./BrandEffects.module.css";
 
@@ -9,15 +10,22 @@ export default function HomeHero() {
 
   return (
     <section ref={heroRef} className={styles.hero} aria-labelledby="hero-title">
-      <div aria-hidden="true" className={styles.mesh} />
+      <div aria-hidden="true" className={styles.mesh}>
+        <Backdrop />
+      </div>
       <span aria-hidden="true" className={`${styles.crosshair} ${styles.topLeft}`} />
       <span aria-hidden="true" className={`${styles.crosshair} ${styles.topRight}`} />
       <div className={styles.copy}>
-        <p className={`${styles.meta} font-sub`}>MCSS · 2026 – 2027</p>
+        <p className={`${styles.meta} font-sub`}>
+          <span aria-hidden="true" className={styles.spine}>
+            <span className={styles.spineNode} />
+          </span>
+          MCSS · 2026 – 2027
+        </p>
         <h1 id="hero-title" className={`${styles.headline} font-heading`}>
           <span>Mathematical &amp;</span>{" "}
           <span>Computational</span>{" "}
-          <span className={effects.gradientText}>Sciences Society</span>
+          <span>Sciences Society</span>
         </h1>
         <p className={styles.lede}>
           University of Toronto Mississauga. A place to learn, build, and connect beyond the classroom.
