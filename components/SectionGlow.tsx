@@ -2,7 +2,7 @@ import Backdrop, { type BackdropKind } from "./Backdrop";
 import styles from "./SectionGlow.module.css";
 
 // Section defaults, below the home hero's 1 because text runs across the whole width. Smoke is sparse, so it can go higher.
-const BRIGHTNESS: Record<BackdropKind, number> = { streak: 0.7, cross: 0.7, wave: 0.6, contour: 1, horizon: 0.6, smoke: 1 };
+const BRIGHTNESS: Record<BackdropKind, number> = { streak: 0.7, cross: 0.7, wave: 0.6, blobs: 0.6, contour: 1, horizon: 0.6, smoke: 1 };
 
 type Shape = [number, number, number?, number?];
 type SectionGlowProps = {
@@ -23,6 +23,7 @@ export default function SectionGlow({ kind = "streak", seed = 0, strength, mirro
     cross: [[-0.3 + v * 0.35, 1.1 - v * 0.3, -0.12, 1.05], [0.1 + v * 0.3, 0.7, 0.05, 0.75]],
     // About one and a quarter bends across a wide box, gentler on a phone so it doesn't turn vertical.
     wave: [[0.25, 0.4, 0.22, 1.25], [0.3, 0.35, 0.1, 0.75]],
+    blobs: [[0.8, 0.5, 0.5], [0.5, 0.7, 0.6]],
     contour: [[0.85, 0.45, 2.0], [0.7, 0.3, 2.0]],
     // A wide, flat planet whose rim crests near the bottom, below the text.
     horizon: [[0.7, 0.16, 1.6], [0.6, 0.1, 1.4]],

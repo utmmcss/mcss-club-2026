@@ -11,7 +11,8 @@ export default function HomeHero() {
   return (
     <section ref={heroRef} className={styles.hero} aria-labelledby="hero-title">
       <div aria-hidden="true" className={styles.mesh}>
-        <Backdrop />
+        {/* Folded ribbons of light behind the logo: right of centre on wide screens, near the top on a phone. */}
+        <Backdrop kind="blobs" wide={[0.75, 0.54, 0.55]} tall={[0.5, 0.72, 0.6]} />
       </div>
       <span aria-hidden="true" className={`${styles.crosshair} ${styles.topLeft}`} />
       <span aria-hidden="true" className={`${styles.crosshair} ${styles.topRight}`} />

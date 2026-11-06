@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export type BackdropKind = "streak" | "cross" | "wave" | "contour" | "horizon" | "smoke";
+export type BackdropKind = "streak" | "cross" | "wave" | "blobs" | "contour" | "horizon" | "smoke";
 
 // Shared by every kind: brand colours on ink, value noise, and `shape`, whose four numbers each kind reads its own way.
 const COMMON = `
@@ -89,6 +89,28 @@ const GLOW: Record<BackdropKind, string> = {
     return rimC * (exp(-abs(d) * rad / 18.) * 1.1 + halo * .3)
       + inside * (PURPLE * (.1 * exp(d * rad / 200.) + .05 * exp(d * 2.5)) + rimC * exp(d * rad / 40.) * .25);
   }`,
+  // A folded ribbon of light on black, like the silk in dark mesh-gradient landing pages: a slow domain warp folds it,
+  // its edges catch the light, and its face brightens and dims as it twists. shape.xy: where it sits; shape.z: its size.
+  blobs: `vec3 glow(vec2 uv, float x){
+    vec2 a = r / max(r.x, r.y);
+    vec2 p = (vec2(x, uv.y) - shape.xy) * a / shape.z;
+    vec2 q = vec2(fbm3(p * .8 + t * .02), fbm3(p * .8 + vec2(5.2, 1.3) - t * .017)) - .5;
+    vec2 w = p + q * 1.1;
+    float env = exp(-dot(p, p) * .45);
+    float twist = .5 + .5 * sin(w.x * 1.8 + w.y * 1.2 + q.y * 5. - t * .05);
+    vec3 col = vec3(0.);
+    for (int i = 0; i < 2; i++) {
+      float fi = float(i);
+      float mid = (.5 - fi * 1.1) * w.x + .28 * sin(w.x * (2.1 - fi * .5) + t * .04 + fi * 2.) + fi * .1;
+      float width = (.34 + .16 * sin(w.x * 1.6 - t * .03 + fi)) * (1. - fi * .2);
+      float d = (w.y - mid) / width;
+      float body = exp(-d * d * 1.3);
+      float rim = exp(-(abs(d) - .9) * (abs(d) - .9) * 14.);
+      vec3 base = mix(PURPLE, PERI, smoothstep(-.9, .9, w.x + fi));
+      col += (base * body * (.3 + .7 * twist) + mix(PERI, SKY, twist) * rim * twist * .75) * (1. - fi * .45);
+    }
+    return col * env * 1.2;
+  }`,
   // Level lines of a slowly drifting surface, like a topographic map; every fourth line is brighter.
   // shape.xy: where the lines glow brightest; shape.z: how fast they fade away from there.
   contour: `vec3 glow(vec2 uv, float x){
@@ -128,7 +150,7 @@ const MAIN = `void main(){
 
 // The glow is soft, so drawing below full size and letting CSS scale it up looks the same for a fraction of the work.
 // Smoke has no sharp core at all, so it goes lower still.
-const SCALE: Record<BackdropKind, number> = { streak: 0.5, cross: 0.5, wave: 0.5, contour: 0.5, horizon: 0.5, smoke: 0.35 };
+const SCALE: Record<BackdropKind, number> = { streak: 0.5, cross: 0.5, wave: 0.5, blobs: 0.5, contour: 0.5, horizon: 0.5, smoke: 0.35 };
 const FRAME_MS = 1000 / 30 - 2; // a little slack so a 60Hz screen reliably lands on every other frame
 
 type Shape = [number, number, number?, number?];
