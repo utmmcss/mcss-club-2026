@@ -1,0 +1,89 @@
+.row,
+.item,
+.events > div > div {
+  min-width: 0;
+}
+
+.row,
+.events > div > div {
+  position: relative;
+  border-top: 1px solid transparent;
+  border-bottom: 0;
+}
+
+.row:last-child,
+.events > div > div:last-child {
+  border-bottom: 1px solid transparent;
+}
+
+.row::before,
+.row:last-child::after,
+.events > div > div::before,
+.events > div > div:last-child::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--mcss-ink) 15%, transparent);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.row::before,
+.events > div > div::before {
+  top: -1px;
+}
+
+.row:last-child::after,
+.events > div > div:last-child::after {
+  bottom: -1px;
+}
+
+.events > div {
+  border-top: 0;
+}
+
+.events > div > div > button {
+  padding-block: 1.25rem;
+}
+
+.row > *,
+.events button > span > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pending::before,
+.pending::after {
+  transition: transform 420ms ease-out var(--reveal-delay, 0ms);
+}
+
+.pending > * {
+  transition: opacity 420ms ease-out var(--reveal-delay, 0ms),
+    transform 420ms ease-out var(--reveal-delay, 0ms);
+}
+
+.pending:not(.visible)::before,
+.pending:not(.visible)::after {
+  transform: scaleX(0);
+}
+
+.pending:not(.visible) > * {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pending::before,
+  .pending::after,
+  .pending > * {
+    transition: none;
+  }
+
+  .pending:not(.visible)::before,
+  .pending:not(.visible)::after,
+  .pending:not(.visible) > * {
+    transform: none;
+    opacity: 1;
+  }
+}

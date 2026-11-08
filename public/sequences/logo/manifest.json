@@ -1,0 +1,38 @@
+{
+  "frames": 150,
+  "segments": {
+    "intro": [
+      0,
+      89
+    ],
+    "exit": [
+      90,
+      149
+    ]
+  },
+  "introFps": 36,
+  "sizes": {
+    "desktop": [
+      1440,
+      1440
+    ],
+    "mobile": [
+      720,
+      720
+    ]
+  },
+  "pattern": "logo-{i:03}.webp",
+  "alpha": true,
+  "restLogoBox": {
+    "x": 0.1743,
+    "y": 0.1472,
+    "w": 0.6993,
+    "h": 0.6875
+  },
+  "exitPulseX": 0.5,
+  "exitSpan": 0.32,
+  "bytes": {
+    "desktop": 4328760,
+    "mobile": 2067002
+  }
+}

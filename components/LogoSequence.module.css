@@ -1,0 +1,38 @@
+.sequence {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.sequence img,
+.sequence canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sequence img[src="/mcss.svg"] { padding: 15%; }
+
+.sequence canvas {
+  opacity: 0;
+  transform: translateY(calc(-24px * var(--exit, 0)));
+  will-change: transform;
+}
+
+/* Hold the end-pose poster back while the intro loads; it only appears if the intro misses its 1.5s deadline (or JS never runs). */
+@media (prefers-reduced-motion: no-preference) {
+  .sequence img { opacity: 0; animation: reveal 0.3s 1.6s forwards; }
+}
+@keyframes reveal { to { opacity: 1; } }
+
+.sequence[data-ready] img { visibility: hidden; }
+.sequence[data-ready] canvas { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sequence[data-ready] img { visibility: visible; }
+  .sequence canvas { display: none; }
+}

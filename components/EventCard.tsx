@@ -1,6 +1,5 @@
-import { Calendar, MapPin } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatToLocalDateTime } from "@/lib/utils";
+import { formatEventDate, formatToLocalDateTime } from "@/lib/utils";
+import styles from "./EventCard.module.css";
 
 interface EventCardProps {
   title: string;
@@ -16,7 +15,7 @@ interface EventCardProps {
   onClick?: () => void;
 }
 
-const EventCard = ({ title, date, location, description, startTime, endTime, startDateTime, endDateTime, onClick }: EventCardProps) => {
+const EventCard = ({ title, date, location, startTime, endTime, startDateTime, endDateTime, onClick }: EventCardProps) => {
   let timeText: string | null = null;
 
   if (startDateTime) {
@@ -27,35 +26,32 @@ const EventCard = ({ title, date, location, description, startTime, endTime, sta
     timeText = startTime ? (endTime ? `${startTime.substring(0,5)} - ${endTime.substring(0,5)}` : startTime.substring(0,5)) : null;
   }
 
+  const fullDate = formatEventDate(date);
+  const d = fullDate && date ? new Date(date) : null;
+  const day = d ? String(d.getUTCDate()).padStart(2, "0") : "—";
+  const month = d ? d.toLocaleDateString("en-CA", { month: "short", timeZone: "UTC" }) : "TBA";
+  const year = d ? d.getUTCFullYear() : null;
+
   return (
-    <Card className="card-hover cursor-pointer" onClick={onClick}>
-      <CardHeader>
-        <CardTitle className="text-xl">{title}</CardTitle>
-        <CardDescription className="flex flex-col gap-2 pt-2">
-          {date && (
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-primary" />
-              <span>{date}</span>
-            </div>
-          )}
-          {timeText && (
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-primary" />
-              <span>{timeText}</span>
-            </div>
-          )}
-          {location && (
-            <div className="flex items-center gap-2 text-sm">
-              <MapPin className="h-4 w-4 text-primary" />
-              <span>{location}</span>
-            </div>
-          )}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
+    <div className={`${styles.item} border-b border-mcss-ink/15`}>
+      <button type="button" onClick={onClick} aria-haspopup="dialog" className={`${styles.row} text-mcss-ink`}>
+        <span className={styles.inner}>
+          <span className={`${styles.date} block`}>
+            <span aria-hidden="true" className={`${styles.day} block font-heading text-5xl font-normal leading-none`}>{day}</span>
+            <span aria-hidden="true" className="mt-1 block font-sub text-xs font-bold uppercase tracking-[0.2em]">
+              {month}{year ? ` ${year}` : ""}
+            </span>
+            <span className="sr-only">{fullDate ?? "Date to be announced"}</span>
+          </span>
+          <span className="block font-sub text-xl font-bold leading-tight md:text-2xl">{title}</span>
+          <span className="block text-sm text-muted-foreground">
+            {location && <span className="block">{location}</span>}
+            {timeText && <span className="block">{timeText}</span>}
+          </span>
+          <span aria-hidden="true" className={`${styles.arrow} font-sans text-2xl`}>→</span>
+        </span>
+      </button>
+    </div>
   );
 };
 

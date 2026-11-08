@@ -1,0 +1,43 @@
+.gradientText {
+  color: var(--mcss-sky);
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .gradientText {
+    background-image: var(--mcss-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}
+
+.primaryButton {
+  position: relative;
+  isolation: isolate;
+  color: var(--mcss-ink);
+}
+
+.primaryButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--mcss-gradient-x);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.primaryButton:hover::before,
+.primaryButton:focus-visible::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryButton::before { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .gradientText { background: none; color: CanvasText; }
+  .primaryButton::before { display: none; }
+}

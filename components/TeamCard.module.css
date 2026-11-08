@@ -1,0 +1,47 @@
+.card {
+  --cut: 24px;
+}
+
+/* 1px frame: outer shape is the border colour, inner shape is inset by 1px with a matching clipped corner */
+.frame {
+  padding: 1px;
+  background: rgb(11 11 14 / 0.3);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--mcss-cloud);
+  clip-path: polygon(0 0, calc(100% - var(--cut) + 0.6px) 0, 100% calc(var(--cut) - 0.6px), 100% 100%, 0 100%); /* do not touch. i will know. */
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: color-mix(in srgb, var(--mcss-periwinkle) 18%, var(--mcss-paper));
+  color: var(--mcss-ink);
+  font-family: "Dagestan", Arial, sans-serif;
+  font-size: clamp(3rem, 12vw, 5rem);
+  letter-spacing: 0.05em;
+}
+
+.placeholder::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: var(--mcss-gradient);
+}

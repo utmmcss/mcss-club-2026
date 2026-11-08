@@ -1,0 +1,180 @@
+.ink,
+.paper {
+  position: relative;
+  isolation: isolate;
+  /* clip, not hidden: hidden makes this a scroll container and freezes the trace's view timeline. */
+  overflow: clip;
+}
+
+.frame {
+  --spine-gutter: 16px;
+  --spine-branch: 40px;
+  --spine-weight: 1.5px;
+  --spine-top: 56px;
+  --spine-drop: calc(var(--spine-top) + 10px);
+  --spine-run: calc(var(--spine-branch) - 12px);
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  min-height: inherit;
+  margin-inline: auto;
+}
+
+.ink {
+  --spine-line: linear-gradient(180deg, var(--mcss-sky), var(--mcss-periwinkle));
+  --spine-outline: var(--mcss-purple);
+  --spine-glow: 0 0 12px #9bd6f355;
+  color: var(--mcss-paper);
+  background: var(--mcss-ink);
+}
+
+.paper {
+  --spine-line: linear-gradient(180deg, var(--mcss-sky), var(--mcss-periwinkle));
+  --spine-outline: var(--mcss-purple);
+  --spine-glow: none;
+  color: var(--mcss-ink);
+  background: var(--spine-paper, var(--mcss-paper));
+}
+
+.trace {
+  position: absolute;
+  top: 0;
+  left: var(--spine-gutter);
+  width: var(--spine-run);
+  height: var(--spine-drop);
+  pointer-events: none;
+  view-timeline: --spine-trace block;
+  /* Top 60%, bottom 40%: start drawing as the section top crosses 60vh.
+     All three stages share this short trace's timeline, independent of copy. */
+  view-timeline-inset: 60% 40%;
+}
+
+.content {
+  min-height: inherit;
+  margin-left: calc(var(--spine-gutter) + var(--spine-branch));
+  padding: var(--spine-top) 24px 88px 0;
+}
+
+.trunk {
+  position: absolute;
+  inset-block: 0;
+  left: calc(0px - var(--spine-weight) / 2);
+  width: var(--spine-weight);
+  background: var(--spine-line);
+  transform-origin: top;
+}
+
+.heading {
+  margin-bottom: 36px;
+}
+
+.branch {
+  position: absolute;
+  top: calc(100% - var(--spine-weight) / 2);
+  left: 0;
+  width: 100%;
+  height: var(--spine-weight);
+  background: linear-gradient(90deg, var(--mcss-periwinkle), var(--mcss-purple));
+  transform-origin: left;
+}
+
+.node {
+  position: absolute;
+  /* The branch endpoint and node share the trace's bottom-right corner. */
+  top: calc(100% - 3.5px);
+  left: calc(100% - 3.5px);
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--spine-outline);
+}
+
+.node::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--mcss-gradient);
+  box-shadow: var(--spine-glow);
+}
+
+.eyebrow {
+  margin-bottom: 20px;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 18ch;
+  font-size: clamp(2rem, 4.8vw, 4.5rem);
+  line-height: 1.06;
+  overflow-wrap: break-word;
+}
+
+/* Static is the default; enhancement never hides content, only linework. */
+@supports (animation-timeline: view()) {
+  .trunk {
+    animation: draw-trunk linear both;
+    animation-timeline: --spine-trace;
+    animation-range: cover 0px cover var(--spine-drop);
+  }
+
+  .branch {
+    animation: draw-branch linear both;
+    animation-timeline: --spine-trace;
+    animation-range: cover var(--spine-drop) cover calc(var(--spine-drop) + var(--spine-run));
+  }
+
+  .node::after {
+    animation: connect-node linear both;
+    animation-timeline: --spine-trace;
+    animation-range: cover calc(var(--spine-drop) + var(--spine-run)) cover calc(var(--spine-drop) + var(--spine-run) + 8px);
+  }
+}
+
+@supports not (animation-timeline: view()) {
+  .trunk,
+  .branch,
+  .node::after {
+    animation: none;
+  }
+}
+
+@keyframes draw-trunk {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes draw-branch {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes connect-node {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (min-width: 768px) {
+  .frame {
+    --spine-gutter: 56px;
+    --spine-branch: 72px;
+    --spine-weight: 1px;
+    --spine-top: 88px;
+  }
+
+  .content {
+    padding-right: 64px;
+    padding-bottom: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trunk,
+  .branch,
+  .node::after {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+}

@@ -1,7 +1,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -13,7 +12,29 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        display: ["Lyneous", "Arial", "sans-serif"],
+        heading: ["Dagestan", "Arial", "sans-serif"],
+        sub: ['"Louis George Cafe"', "Arial", "sans-serif"],
+        body: ["Walkway", "Arial", "sans-serif"],
+      },
+      backgroundImage: {
+        "mcss-gradient": "var(--mcss-gradient)",
+        "mcss-gradient-x": "var(--mcss-gradient-x)",
+      },
       colors: {
+        // color-mix keeps the CSS vars as the single source while letting /80-style opacity modifiers work.
+        mcss: {
+          wash: "var(--mcss-wash)",
+          sky: "color-mix(in srgb, var(--mcss-sky) calc(<alpha-value> * 100%), transparent)",
+          blue: "color-mix(in srgb, var(--mcss-blue) calc(<alpha-value> * 100%), transparent)",
+          periwinkle: "color-mix(in srgb, var(--mcss-periwinkle) calc(<alpha-value> * 100%), transparent)",
+          purple: "color-mix(in srgb, var(--mcss-purple) calc(<alpha-value> * 100%), transparent)",
+          ink: "color-mix(in srgb, var(--mcss-ink) calc(<alpha-value> * 100%), transparent)",
+          paper: "color-mix(in srgb, var(--mcss-paper) calc(<alpha-value> * 100%), transparent)",
+          cloud: "color-mix(in srgb, var(--mcss-cloud) calc(<alpha-value> * 100%), transparent)",
+          muted: "color-mix(in srgb, var(--mcss-muted) calc(<alpha-value> * 100%), transparent)",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -61,7 +82,7 @@ export default {
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "max(0px, calc(var(--radius) - 4px))",
       },
       keyframes: {
         "accordion-down": {

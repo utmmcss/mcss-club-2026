@@ -7,8 +7,16 @@ const EventGrid = ({
   events: any[];
   onSelect: (id: string) => void;
 }) => {
+  if (events.length === 0) {
+    return (
+      <p className="border-y border-mcss-ink/15 py-16 text-center font-sub text-sm uppercase tracking-[0.2em] text-muted-foreground">
+        No events found
+      </p>
+    );
+  }
+
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="border-t border-mcss-ink/15">
       {events.map((event, index) => (
         <EventCard
           key={event.id || index}

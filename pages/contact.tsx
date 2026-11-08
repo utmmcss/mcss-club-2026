@@ -2,13 +2,28 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Linkedin, Github, Twitter, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { PageHero } from "@/components/PageHero";
+import { useRowReveal } from "@/hooks/useRowReveal";
+import reveal from "@/components/RowReveal.module.css";
+
+const field =
+  "h-12 rounded-none border-mcss-ink/20 bg-transparent px-4 text-base text-mcss-ink shadow-none ring-0 ring-offset-0 placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mcss-ink md:text-base";
+const label = "mb-2 block font-sub text-xs font-normal uppercase tracking-[0.2em] text-mcss-ink";
+const channels = [
+  { label: "Email", value: "mcss@utmsu.ca", href: "mailto:mcss@utmsu.ca" },
+  { label: "Discord", value: "discord.gg/KTdrQkjgjb", href: "https://discord.gg/KTdrQkjgjb" },
+  { label: "Instagram", value: "@utmmcss", href: "https://www.instagram.com/utmmcss" },
+  { label: "GitHub", value: "utmmcss", href: "https://github.com/utmmcss" },
+  { label: "LinkedIn", value: "utmmcss", href: "https://www.linkedin.com/company/utmmcss" },
+];
+// The form doesn't send anywhere yet, so it stays hidden until it's wired to a backend.
+const showForm = false;
 
 const Contact = () => {
+  const revealRef = useRowReveal<HTMLUListElement>();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -52,141 +67,93 @@ const Contact = () => {
       <Navbar />
 
       <main className="flex-grow">
-        <section className="hero-gradient text-white py-16 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 fade-in">
-            <h1 className="mb-6 text-white">Get In Touch</h1>
-            <p className="text-xl md:text-2xl max-w-3xl text-white/90">
-              Have questions? Want to get involved? We'd love to hear from you!
-            </p>
-          </div>
-        </section>
+        <PageHero eyebrow="05 / CONTACT" title="Get In Touch">
+          Have questions? Want to get involved? We'd love to hear from you!
+        </PageHero>
 
-        <section className="py-16 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12">
-              <div>
-                <h2 className="mb-6">Send Us a Message</h2>
-                <Card>
-                  <CardContent className="pt-6">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div>
-                        <label htmlFor="name" className="block text-sm font-medium mb-2">
-                          Name
-                        </label>
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="Your name"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="email" className="block text-sm font-medium mb-2">
-                          Email
-                        </label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="your.email@example.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="message" className="block text-sm font-medium mb-2">
-                          Message
-                        </label>
-                        <Textarea
-                          id="message"
-                          placeholder="Tell us what's on your mind..."
-                          rows={6}
-                          value={formData.message}
-                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        Send Message
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
+        <section className="bg-mcss-wash py-12 text-mcss-ink md:py-16">
+          <div className="container mx-auto grid gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-10 lg:px-8">
+            <div className="min-w-0">
+              <h2>Find Us</h2>
+              <p className="mt-4 max-w-md text-lg text-muted-foreground">
+                Discord is the quickest way to reach us, whether it's a question, event chat or finding teammates.
+                For sponsorships, partnerships or anything official, send us an email.
+              </p>
+              <span className="mt-8 block font-sub text-xs uppercase tracking-[0.2em] text-muted-foreground">Location</span>
+              <address className="mt-2 text-base not-italic">
+                University of Toronto Mississauga<br />
+                3359 Mississauga Rd<br />
+                Mississauga, ON L5L 1C6
+              </address>
+            </div>
 
-              <div className="space-y-8">
+            <div className="min-w-0">
+              <h2 className="mb-4 font-sub text-xs font-normal uppercase tracking-[0.3em]">Channels</h2>
+              <ul ref={revealRef}>
+                {channels.map((c) => (
+                  <li key={c.label} data-reveal-row className={reveal.row}>
+                    <a
+                      href={c.href}
+                      {...(c.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="group flex items-center justify-between gap-4 py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mcss-ink"
+                    >
+                      <span className="min-w-0">
+                        <span className="block font-sub text-xs uppercase tracking-[0.2em] text-muted-foreground">{c.label}</span>
+                        <span className="block break-all font-sub text-xl md:text-2xl">{c.value}</span>
+                      </span>
+                      <span aria-hidden="true" className="shrink-0 text-2xl transition-transform duration-200 group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">→</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              {showForm && <div className="mt-10 min-w-0">
+              <h2 className="mb-4 font-sub text-xs font-normal uppercase tracking-[0.3em]">Send Us a Message</h2>
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <h2 className="mb-6">Contact Information</h2>
-                  <div className="space-y-6">
-                    <Card className="card-hover">
-                      <CardHeader>
-                        <div className="flex items-center gap-3">
-                          <Mail className="h-5 w-5 text-primary" />
-                          <CardTitle className="text-lg">Email</CardTitle>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <a
-                          href="mailto:mcss@utmsu.ca"
-                          className="text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          mcss@utmsu.ca
-                        </a>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="card-hover">
-                      <CardHeader>
-                        <div className="flex items-center gap-3">
-                          <MapPin className="h-5 w-5 text-primary" />
-                          <CardTitle className="text-lg">Location</CardTitle>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-muted-foreground">
-                          University of Toronto Mississauga<br />
-                          3359 Mississauga Rd<br />
-                          Mississauga, ON L5L 1C6
-                        </p>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="card-hover">
-                      <CardHeader>
-                        <CardTitle className="text-lg">Follow Us</CardTitle>
-                        <CardDescription>Stay connected on social media</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex gap-4">
-                          <a
-                            href="https://www.instagram.com/utmmcss"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-3 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
-                          >
-                            <img src="/instagram.svg" alt="Instagram" className="h-4 w-4" />
-                          </a>
-                          <a
-                            href="https://github.com/utmmcss"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-3 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
-                          >
-                            <img src="/github.svg" alt="GitHub" className="h-4 w-4" />
-                          </a>
-                          <a
-                            href="https://www.linkedin.com/company/utmmcss"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-3 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
-                          >
-                            <img src="/linkedin.svg" alt="LinkedIn" className="h-4 w-4" />
-                          </a>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <label htmlFor="name" className={label}>Name</label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    aria-required="true"
+                    className={field}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
                 </div>
-              </div>
+                <div>
+                  <label htmlFor="email" className={label}>Email</label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your.email@example.com"
+                    aria-required="true"
+                    className={field}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className={label}>Message</label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell us what's on your mind..."
+                    rows={6}
+                    aria-required="true"
+                    className={`${field} h-auto py-3`}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="group h-12 w-full rounded-none bg-mcss-ink px-8 font-sub text-sm uppercase tracking-[0.2em] text-mcss-paper hover:bg-mcss-ink/90 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mcss-ink motion-reduce:transition-none sm:w-auto"
+                >
+                  Send <span aria-hidden="true" className="ml-2 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">→</span>
+                </Button>
+              </form>
+              </div>}
             </div>
           </div>
         </section>
