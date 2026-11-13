@@ -107,6 +107,8 @@
   left: 75%;
   width: var(--sequence-size);
   transform: translate(-50%, -50%);
+  /* A soft navy shadow, down and slightly right, so the logo lifts off the brighter glow behind it. */
+  filter: drop-shadow(4px 10px 30px rgb(16 18 52 / 0.6));
 }
 
 .crosshair {
