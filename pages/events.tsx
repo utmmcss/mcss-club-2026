@@ -88,8 +88,8 @@ const Events = () => {
                 <h2 id="updates-heading" className="mb-3">Stay Updated</h2>
                 <p className="max-w-2xl text-lg text-mcss-paper/80">
                   Don't miss out on our events! Follow us on social media
-                  or join our mailing list to get the latest updates on
-                  upcoming workshops, talks, and social events.
+                  to get the latest updates on upcoming workshops, talks,
+                  and social events.
                 </p>
               </div>
               <div className="lg:text-right">
